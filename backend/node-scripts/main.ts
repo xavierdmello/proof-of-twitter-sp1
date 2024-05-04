@@ -23,7 +23,7 @@ function verifyBodyHash(dkimResult: DKIMVerificationResult): boolean {
 }
 
 function verifySignature(dkimResult: DKIMVerificationResult): boolean {
-  const { publicKey, signature, headers, bodyHash, algo } = dkimResult;
+  const { publicKey, signature, headers } = dkimResult;
 
   // Canonicalize the headers
   const canonicalizedHeaders = canonicalizeHeaders(headers, dkimResult.format);
@@ -40,7 +40,7 @@ function verifySignature(dkimResult: DKIMVerificationResult): boolean {
   return verified;
 }
 
-function canonicalizeHeaders(headers: Buffer, format: string): string {
+function canonicalizeHeaders(headers: string, format: string): string {
   const [headerCanonicalization] = format.split('/');
 
   switch (headerCanonicalization) {
@@ -60,12 +60,12 @@ function canonicalizeHeaders(headers: Buffer, format: string): string {
   }
 }
 
-function canonicalizeBody(body: Buffer, canonicalization: string): Buffer {
+function canonicalizeBody(body: string, canonicalization: string): string {
   switch (canonicalization) {
     case 'simple':
       // Remove all empty lines at the end of the message body
       const simpleBody = body.toString().replace(/(\r\n)*$/, '\r\n');
-      return Buffer.from(simpleBody);
+      return simpleBody;
     case 'relaxed':
       const lines = body.toString().split('\n');
       const processedLines = lines.map(line => {
@@ -84,33 +84,25 @@ function canonicalizeBody(body: Buffer, canonicalization: string): Buffer {
         processedLines.push('');
       }
       const relaxedBody = processedLines.join('\r\n');
-      return Buffer.from(relaxedBody);
+      return relaxedBody;
     default:
       throw new Error(`Unsupported canonicalization algorithm: ${canonicalization}`);
   }
 }
-
-// https://github.com/GoogleChromeLabs/jsbi/issues/30
-// monkey patch for serializing BigInt
-(BigInt.prototype as any).toJSON = function () {
-  return this.toString();
-};
 
 async function main() {
     const rawEmail = fs.readFileSync(
         path.join(__dirname, "./email.eml"),
         "utf8"
       );
-    const dkimResult = await verifyDKIMSignature(Buffer.from(rawEmail));
+    const dkimResult = await verifyDKIMSignature(rawEmail);
     console.log(`Body Hash Verified: ${verifyBodyHash(dkimResult)}`)
     console.log(`Signature Verified: ${verifySignature(dkimResult)}`)
     fs.writeFileSync("./input.json", JSON.stringify(dkimResult))
 }
 
 main()
-  .then(() => {
-
-  })
+  .then(() => {})
   .catch((error) => {
     console.error('Unhandled error:', error);
   });
