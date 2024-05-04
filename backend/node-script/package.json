@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@zk-email/circuits": "^6.0.2",
-    "@zk-email/contracts": "^6.0.2",
-    "@zk-email/helpers": "^6.0.2"
-  }
-}
