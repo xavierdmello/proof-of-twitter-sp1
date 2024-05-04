@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'ABCFavorit-Book-Trial';
+  src: url('/ABCFavorit-Book-Trial.woff2') format('woff2'),
+       url('/ABCFavorit-Book-Trial.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
