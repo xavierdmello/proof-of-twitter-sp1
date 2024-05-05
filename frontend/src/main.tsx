@@ -14,7 +14,30 @@ const theme = extendTheme({
     global: {
       body: {
         bg: 'black',
+        color: 'black',
+      },
+      h1: {
         color: 'white',
+      },
+      h2: {
+        color: 'white',
+      },
+      h3: {
+        color: 'white',
+      },
+      h4: {
+        color: 'white',
+      },
+      h5: {
+        color: 'white',
+      },
+      h6: {
+        color: 'white',
+      },
+      textarea: {
+        _placeholder: {
+          color: 'gray',
+        },
       },
     },
   },

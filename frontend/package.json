@@ -17,6 +17,7 @@
     "@zk-email/circuits": "^6.0.2",
     "@zk-email/contracts": "^6.0.2",
     "@zk-email/helpers": "^6.0.2",
+    "axios": "^1.6.8",
     "framer-motion": "^11.1.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
