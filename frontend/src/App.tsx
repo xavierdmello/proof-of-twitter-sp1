@@ -52,9 +52,19 @@ function App() {
                     Proof Of Twitter: SP1 ZK Email Demo
                 </Heading>
 
-                <Box width={"100%"} maxW={'1200px'} flexDirection={"column"} marginX={'auto'} display="flex" flexGrow={1}>
+                <Box width={"100%"} maxW={'1200px'} zIndex={2} flexDirection={"column"} marginX={'auto'} display="flex" flexGrow={1}>
                     <Divider />
-                    <Box flexGrow={1}>hi</Box>
+                    <br/>
+                    <Box flexGrow={1} display={"flex"} gap={"40px"} flexDirection={"row"}>
+                        <Box width={"50%"}>
+                            <Heading fontWeight={"300"} size={"md"}>Prove you own a Twitter handle by verifying a confirmation email from Twitter.<br/><br/>Proofs generated using this website are a cryptographic guarantee that a user (identified by their Ethereum address) owns a certain Twitter account, while masking out any private data.<br/><br/> This
+                                demo is just one use case of Succinct's open-source zkVM, which lets developers write zero-knowledge proofs in Rust with unbeatable
+                                performance.</Heading>
+                        </Box>
+                        <Box>
+                           
+                        </Box>
+                    </Box>
                     <Box display={"flex"} flexDirection={"column"} gap={"20px"} mb={"20px"} zIndex={2}>
                         <Divider />
                         <Box display={'flex'} flexDirection={'row'} gap={'40px'}>
