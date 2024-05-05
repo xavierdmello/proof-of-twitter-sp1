@@ -5,6 +5,7 @@ name = "backend-script"
 edition = "2021"
 
 [dependencies]
+serde = "1.0.200"
 serde_json = "1.0.116"
 sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git" }
 

@@ -1,4 +1,3 @@
-import {generateTwitterVerifierCircuitInputs} from "./generate-inputs"
 import { verifyDKIMSignature, DKIMVerificationResult } from "@zk-email/helpers/dist/dkim/"
 import fs from "fs"
 import path from "path"
@@ -28,7 +27,7 @@ function verifySignature(dkimResult: DKIMVerificationResult): boolean {
   // Canonicalize the headers
   const canonicalizedHeaders = canonicalizeHeaders(headers, dkimResult.format);
 
-  // Convert the signature from base64 to a binary buffer
+  // Convert the sig nature from base64 to a binary buffer
   const signatureBuffer = Buffer.from(signature, 'base64');
 
   // Create a verification object
@@ -98,7 +97,7 @@ async function main() {
     const dkimResult = await verifyDKIMSignature(rawEmail);
     console.log(`Body Hash Verified: ${verifyBodyHash(dkimResult)}`)
     console.log(`Signature Verified: ${verifySignature(dkimResult)}`)
-    fs.writeFileSync("./input.json", JSON.stringify(dkimResult))
+    fs.writeFileSync("./dkim.json", JSON.stringify(dkimResult))
 }
 
 main()

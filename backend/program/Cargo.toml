@@ -5,4 +5,12 @@ name = "backend-program"
 edition = "2021"
 
 [dependencies]
+base64 = "0.22.1"
+rsa = "0.9.6"
+serde = "1.0.200"
+sha2 = "0.10.8"
 sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git" }
+
+
+[patch.crates-io]
+sha2-v0-10-8 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", branch = "patch-v0.10.8" }
