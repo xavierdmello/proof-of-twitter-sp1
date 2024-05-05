@@ -31,8 +31,9 @@ fn main() {
     stdin.write(&dkim);
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
+    println!("before proof");
     let mut proof = client.prove(&pk, stdin).expect("proving failed");
-    
+    println!("after proof");
     // Read output.
     let body_verified = proof.public_values.read::<bool>();
     let signature_verified = proof.public_values.read::<bool>();
