@@ -39,19 +39,25 @@ const theme = extendTheme({
           color: 'gray',
         },
       },
+      input: {
+        _placeholder: {
+          color: 'gray',
+        },
+      },
     },
   },
   fonts: {
-    body: 'ABCFavorit-Book-Trial, sans-serif',
-    heading: 'ABCFavorit-Book-Trial, sans-serif',
+    body: 'ABCFavorit, sans-serif',
+    heading: 'ABCFavorit, sans-serif',
   },
 });
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
-   
+
   </React.StrictMode>,
 )

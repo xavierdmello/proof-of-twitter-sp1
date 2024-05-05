@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Textarea, Box, Heading } from '@chakra-ui/react';
+import { Textarea, Box, Heading, Text, Highlight, Input, Button  } from '@chakra-ui/react';
+import { Divider } from '@chakra-ui/react'
 import axios from 'axios';
 
 function App() {
     const [email, setEmail] = useState<string>('');
+    const [proof, setProof] = useState<string>('');
+    const [ethAddress, setEthAddress] = useState<string>('');
 
     return (
         <Box backgroundColor={'rgb(244, 249, 249)'} height={'100vh'} width={'100vw'} p="10px">
@@ -22,11 +25,11 @@ function App() {
                 _after={{
                     content: '""',
                     position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "30%",
-                    background: "linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0))",
+                    bottom: "-10%",
+                    left: "-25%",
+                    width: "150%",
+                    height: "70%",
+                    background: "radial-gradient(ellipse at bottom center, rgba(0,0,0,0.5), rgba(0,0,0,0) 70%)",
                     zIndex: 1,
                 }}
             >
@@ -38,26 +41,53 @@ function App() {
                     height="100%"
                     zIndex={0}
                     backgroundImage={`repeating-linear-gradient(
-            -70deg,
-            rgba(255, 255, 255, 0.1),
-            rgba(255, 255, 255, 0.1) 1px,
+            -80deg,
+            rgba(255, 255, 255, 0.05),
+            rgba(255, 255, 255, 0.05) 1px,
             transparent 1px,
             transparent 50px
           )`}
                 />
-                <Heading fontWeight={"600"} marginX={"auto"} zIndex={2}>
+                <Heading fontWeight={"500"} marginX={"auto"} zIndex={2}>
                     Proof Of Twitter: SP1 ZK Email Demo
                 </Heading>
-                <Heading fontWeight={"500"} size={'lg'} zIndex={2}>Email Input</Heading>
-                <Textarea
-                    onChange={e => setEmail(e.target.value)}
-                    value={email}
-                    size="md"
-                    minH="200px"
-                    placeholder='Full Email with Headers'
-                    background={"rgb(244, 249, 249)"}
-                    zIndex={2}
-                />
+
+                <Divider />
+                <Box display={'flex'} flexDirection={'row'} gap={'40px'} zIndex={2}>
+                    <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
+                        <Heading fontWeight={"400"} size={'lg'} zIndex={2}>Generate Proof</Heading>
+                        <Heading fontWeight={"400"} size={'sm'}>Enter your raw email</Heading>
+                        <Textarea
+                            onChange={e => setEmail(e.target.value)}
+                            value={email}
+                            size="md"
+                            minH="200px"
+                            placeholder='Full Email with Headers'
+                            zIndex={2}
+                            background='rgb(244, 249, 249)'
+                        />
+                        <Heading fontWeight={"400"} size={'sm'}>Ethereum address to associate with twitter handle</Heading>
+                        <Box display={'flex'} flexDirection={'row'} gap={'10px'}>
+                            <Input background='rgb(244, 249, 249)' value={ethAddress} placeholder={"Ethereum Address (0x...)"} onChange={e => setEthAddress(e.target.value)}></Input>
+                            <Button backgroundColor={'rgb(232, 254, 86)'} color={'black'} fontWeight={"300"}>Generate Proof</Button>
+                        </Box>
+                    </Box>
+                    <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
+                        <Heading fontWeight={"400"} size={'lg'} zIndex={2}>Verify Proof</Heading>
+                        <Heading fontWeight={"400"} size={'sm'}>Verify a twitter proof</Heading>
+                        <Textarea
+                            onChange={e => setProof(e.target.value)}
+                            value={proof}
+                            size="md"
+                            minH="200px"
+                            placeholder='Twitter Proof'
+                            background='rgb(244, 249, 249)'
+                            zIndex={2}
+                        />
+
+                    </Box>
+                </Box>
+
             </Box>
         </Box>
     );
