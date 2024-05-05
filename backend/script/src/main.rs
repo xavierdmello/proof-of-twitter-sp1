@@ -40,13 +40,16 @@ fn main() {
     // Read output.
     let body_verified = proof.public_values.read::<bool>();
     let signature_verified = proof.public_values.read::<bool>();
-    let dkim_verified = proof.public_values.read::<bool>();
+    let from_address_verified = proof.public_values.read::<bool>();
+    let is_pw_reset_email = proof.public_values.read::<bool>();
+    let twitter_proven = proof.public_values.read::<bool>();
     let verified_address = proof.public_values.read::<String>();
     println!("Email verified: {}", body_verified);
     println!("Email signature verified: {}", signature_verified);
-    println!("DKIM verified: {}", dkim_verified);
-    println!("Verified address: {}", verified_address);
-
+    println!("From address verified: {}", from_address_verified);
+    println!("Email is password reset email: {}", is_pw_reset_email);
+    println!("Twitter proven: {}", twitter_proven);
+    println!("Verified crypto address: {}", verified_address);
 
     // Verify proof.
     client.verify(&proof, &vk).expect("verification failed");

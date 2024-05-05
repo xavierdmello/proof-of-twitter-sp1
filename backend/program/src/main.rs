@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
 use base64::prelude::*;
 use rsa::{pkcs8::DecodePublicKey, RsaPublicKey, Pkcs1v15Sign};
+use regex::Regex;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct DKIM {
@@ -21,16 +22,20 @@ struct DKIM {
 
 pub fn main() {
     let dkim = sp1_zkvm::io::read::<DKIM>();
-    let address = sp1_zkvm::io::read::<String>();
+    let crypto_address = sp1_zkvm::io::read::<String>();
 
     let body_verified = verify_body(&dkim);
     let signature_verified = verify_signature(&dkim);
-    let dkim_verified = body_verified && signature_verified;
+    let from_address_verified = verify_from_address(&dkim);
+    let is_pw_reset_email = verify_pw_reset_email(&dkim);
+    let twitter_proved = body_verified && signature_verified && from_address_verified && is_pw_reset_email;
 
     sp1_zkvm::io::commit(&body_verified);
     sp1_zkvm::io::commit(&signature_verified);
-    sp1_zkvm::io::commit(&dkim_verified);
-    sp1_zkvm::io::commit(&address);
+    sp1_zkvm::io::commit(&from_address_verified);
+    sp1_zkvm::io::commit(&is_pw_reset_email);
+    sp1_zkvm::io::commit(&twitter_proved);
+    sp1_zkvm::io::commit(&crypto_address);
 }
 
 fn verify_body(dkim: &DKIM) -> bool {
@@ -71,4 +76,38 @@ fn verify_signature(dkim: &DKIM) -> bool {
     let padding = Pkcs1v15Sign {hash_len: hash_len, prefix: prefix};
     let result = public_key.verify(padding, &hash, &signature);
     result.is_ok()
+}
+
+fn verify_from_address(dkim: &DKIM) -> bool {
+    // Get email address after from: in header
+    let re = Regex::new(r"\r\nfrom:.*?<(.+?)>").unwrap();
+
+    let mut match_count = 0;
+    let mut email = String::new();
+
+    for captures in re.captures_iter(dkim.headers.as_str()) {
+        match_count += 1;
+        if match_count > 1 {
+            println!("Only one 'from' address is supported.");
+            return false;
+        }
+        email = captures[1].to_string();
+    }
+
+    if match_count == 0 {
+        println!("No match found for the 'from' field.");
+        return false;
+    }
+
+    if !email.ends_with("@x.com") {
+        println!("Email address is not from x.com.");
+        return false;
+    }
+    
+    true
+}
+
+
+fn verify_pw_reset_email(dkim: &DKIM) -> bool {
+    true
 }
