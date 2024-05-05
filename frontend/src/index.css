@@ -1,7 +1,39 @@
-@font-face {
-  font-family: 'ABCFavorit-Book-Trial';
+/* @font-face {
+  font-family: 'ABCFavorit';
   src: url('/ABCFavorit-Book-Trial.woff2') format('woff2'),
        url('/ABCFavorit-Book-Trial.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+  font-weight: 400;
+  font-style: 400;
+} */
+
+
+@font-face {
+  font-family: 'ABCFavorit';
+  src: url('/ABCFavorit-Light-Trial.woff2') format('woff2'),
+       url('/ABCFavorit-Light-Trial.woff') format('woff');
+  font-weight: 300;
+  font-style: 300;
+}
+
+@font-face {
+  font-family: 'ABCFavorit';
+  src: url('/ABCFavorit-Regular-Trial.woff2') format('woff2'),
+       url('/ABCFavorit-Regular-Trial.woff') format('woff');
+  font-weight: 400;
+  font-style: 400;
+}
+@font-face {
+  font-family: 'ABCFavorit';
+  src: url('/ABCFavorit-Medium-Trial.woff2') format('woff2'),
+       url('/ABCFavorit-Medium-Trial.woff') format('woff');
+  font-weight: 500;
+  font-style: 500;
+}
+
+@font-face {
+  font-family: 'ABCFavorit';
+  src: url('/ABCFavorit-Bold-Trial.woff2') format('woff2'),
+       url('/ABCFavorit-Bold-Trial.woff') format('woff');
+  font-weight: 700;
+  font-style: 700;
 }
