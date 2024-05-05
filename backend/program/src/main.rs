@@ -21,7 +21,8 @@ struct DKIM {
 
 pub fn main() {
     let dkim = sp1_zkvm::io::read::<DKIM>();
-    
+    let address = sp1_zkvm::io::read::<String>();
+
     let body_verified = verify_body(&dkim);
     let signature_verified = verify_signature(&dkim);
     let dkim_verified = body_verified && signature_verified;
@@ -29,6 +30,7 @@ pub fn main() {
     sp1_zkvm::io::commit(&body_verified);
     sp1_zkvm::io::commit(&signature_verified);
     sp1_zkvm::io::commit(&dkim_verified);
+    sp1_zkvm::io::commit(&address);
 }
 
 fn verify_body(dkim: &DKIM) -> bool {
@@ -59,7 +61,6 @@ fn verify_signature(dkim: &DKIM) -> bool {
     let signature = BASE64_STANDARD.decode(&dkim.signature).unwrap();
 
     // 4. verify the signature
-    println!("verifying sig..");
     // RSASSA-PKCS1-V1_5 magic padding bytes
     // https://crypto.stackexchange.com/questions/86385/initial-value-for-rsa-and-sha-256-signature-encoding
     let prefix: Box<[u8]> = Box::new([
