@@ -25,6 +25,8 @@ name = "backend-program"
 version = "0.1.0"
 dependencies = [
  "base64",
+ "hex",
+ "num-bigint",
  "rsa",
  "serde",
  "sha2",

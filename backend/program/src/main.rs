@@ -29,7 +29,6 @@ pub fn main() {
     sp1_zkvm::io::commit(&body_verified);
     sp1_zkvm::io::commit(&signature_verified);
     sp1_zkvm::io::commit(&dkim_verified);
-    println!("commited everyithing");
 }
 
 fn verify_body(dkim: &DKIM) -> bool {
@@ -61,18 +60,14 @@ fn verify_signature(dkim: &DKIM) -> bool {
 
     // 4. verify the signature
     println!("verifying sig..");
-    // RSASSA-PKCS1-V1_5 padding bytes
+    // RSASSA-PKCS1-V1_5 magic padding bytes
     // https://crypto.stackexchange.com/questions/86385/initial-value-for-rsa-and-sha-256-signature-encoding
     let prefix: Box<[u8]> = Box::new([
         0x30, 0x31, 0x30, 0x0d, 0x06, 0x09, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01, 0x05, 0x00, 0x04, 0x20
     ]);
     // SHA-256 produces hash output of 32 bytes
     let hash_len = Some(32);
-    let padding = Pkcs1v15Sign {hash_len: Some(32), prefix: prefix};
-    println!("padding created..");
+    let padding = Pkcs1v15Sign {hash_len: hash_len, prefix: prefix};
     let result = public_key.verify(padding, &hash, &signature);
-    println!("result calculated..");
-    println!("{}", result.is_ok());
-    println!("result ok  printed..");
     result.is_ok()
 }

@@ -1,6 +1,6 @@
 //! A simple script to generate and verify the proof of a given program.
 
-use sp1_sdk::{ProverClient, SP1Stdin};
+use sp1_sdk::{ProverClient, SP1Stdin, utils};
 use serde::{Deserialize, Serialize};
 use std::fs;
 
@@ -22,6 +22,7 @@ struct DKIM {
 }
 
 fn main() {
+    utils::setup_logger();
     // Load JSON circuit inputs
     let input_json = fs::read_to_string("dkim.json").expect("failed to read dkim.json");
     let dkim: DKIM = serde_json::from_str(&input_json).expect("failed to parse dkim.json");
@@ -31,9 +32,9 @@ fn main() {
     stdin.write(&dkim);
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
-    println!("before proof");
+    println!("Generating proof...");
     let mut proof = client.prove(&pk, stdin).expect("proving failed");
-    println!("after proof");
+    println!("Proof finished generating");
     // Read output.
     let body_verified = proof.public_values.read::<bool>();
     let signature_verified = proof.public_values.read::<bool>();
