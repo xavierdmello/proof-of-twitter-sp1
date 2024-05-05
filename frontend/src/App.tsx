@@ -69,7 +69,7 @@ function App() {
                         <Heading fontWeight={"400"} size={'sm'}>Ethereum address to associate with twitter handle</Heading>
                         <Box display={'flex'} flexDirection={'row'} gap={'10px'}>
                             <Input background='rgb(244, 249, 249)' value={ethAddress} placeholder={"Ethereum Address (0x...)"} onChange={e => setEthAddress(e.target.value)}></Input>
-                            <Button backgroundColor={'rgb(232, 254, 86)'} color={'black'} fontWeight={"300"}>Generate Proof</Button>
+                            <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} fontWeight={"500"}>Generate Proof</Button>
                         </Box>
                     </Box>
                     <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
