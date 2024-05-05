@@ -111,6 +111,13 @@ fn verify_from_address(dkim: &DKIM) -> bool {
 
 
 fn verify_pw_reset_email(dkim: &DKIM) -> bool {
+    // Verify the subject in the headers
+    // "This email was meant for @username" in the body is already verified in the get_twitter_username fn
+    let subject_re = Regex::new(r"\r\nsubject:Password reset request").unwrap();
+    if !subject_re.is_match(&dkim.headers) {
+        return false;
+    }
+
     true
 }
 
