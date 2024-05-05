@@ -28,12 +28,14 @@ pub fn main() {
     let signature_verified = verify_signature(&dkim);
     let from_address_verified = verify_from_address(&dkim);
     let is_pw_reset_email = verify_pw_reset_email(&dkim);
-    let twitter_proved = body_verified && signature_verified && from_address_verified && is_pw_reset_email;
+    let twitter_username = get_twitter_username(&dkim); // blank string if no/invalid twitter username
+    let twitter_proved = body_verified && signature_verified && from_address_verified && is_pw_reset_email && twitter_username.len() > 0;
 
     sp1_zkvm::io::commit(&body_verified);
     sp1_zkvm::io::commit(&signature_verified);
     sp1_zkvm::io::commit(&from_address_verified);
     sp1_zkvm::io::commit(&is_pw_reset_email);
+    sp1_zkvm::io::commit(&twitter_username);
     sp1_zkvm::io::commit(&twitter_proved);
     sp1_zkvm::io::commit(&crypto_address);
 }
@@ -110,4 +112,18 @@ fn verify_from_address(dkim: &DKIM) -> bool {
 
 fn verify_pw_reset_email(dkim: &DKIM) -> bool {
     true
+}
+
+fn get_twitter_username(dkim: &DKIM) -> String {
+    let re = Regex::new(r"This email was meant for (@\w+)").unwrap();
+    
+    // If "This email was meant for @username" found.
+    if let Some(captures) = re.captures(&dkim.body) {
+        if let Some(username) = captures.get(1) {
+            return username.as_str().to_string();
+        }
+    }
+    
+    // If no username found, return empty string.
+    String::new()
 }
