@@ -3,20 +3,55 @@ import { Textarea, Box, Heading, Text, Highlight, Input, Button,  List,
     ListItem,
     ListIcon,
     OrderedList,
-    UnorderedList,Link    } from '@chakra-ui/react';
+    UnorderedList,Link, Progress, Divider, Spinner, useToast     } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons'
-import { Divider } from '@chakra-ui/react'
 import axios from 'axios';
 
 function App() {
     const [email, setEmail] = useState<string>('');
     const [proof, setProof] = useState<string>('');
     const [ethAddress, setEthAddress] = useState<string>('');
+    const [proofGenerating, setProofGenerating] = useState<bool>(false);
+    const toast = useToast()
 
     async function handleGenerateProof() {
         // timeout: 10 mins
-        const response = await axios.post("http://127.0.0.1:8000/prove", {email, ethAddress}, {timeout: 600000});
-        console.log(response.data)
+        setProofGenerating(true);
+
+        let response;
+        const startTime = new Date().getTime();
+
+        try {
+            response = await axios.post("http://127.0.0.1:8000/prove", { email, ethAddress }, { timeout: 600000 });
+            const endTime = new Date().getTime();
+            const duration = endTime - startTime;
+            const minutes = Math.floor(duration / 60000);
+            const seconds = Math.floor((duration % 60000) / 1000);
+
+            toast({
+                title: 'Proof Generated',
+                description: `Proof Of Twitter Created (${minutes}m${seconds}s)`,
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+            });
+        } catch (e) {
+            let message = "Unknown Error"
+            if (e instanceof Error) {
+                message = e.message
+            }
+            setProofGenerating(false);
+            toast({
+                title: 'Error Generating Proof',
+                description: message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
+        }
+
+        setProofGenerating(false);
+
     }
 
     function handleVerifyProof() {
@@ -202,7 +237,7 @@ function App() {
                                 <Heading fontWeight={"400"} size={'sm'}>Ethereum address to associate with twitter handle</Heading>
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'}>
                                     <Input background='rgb(244, 249, 249)' value={ethAddress} placeholder={"Ethereum Address (0x...)"} onChange={e => setEthAddress(e.target.value)} width={'100%'}></Input>
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} width={'40%'} minW={"180px"} onClick={handleGenerateProof}>GENERATE PROOF</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} width={'40%'} minW={proofGenerating ? "220px" : "220px"} onClick={handleGenerateProof}>{proofGenerating ? "GENERATING PROOF" : "GENERATE PROOF"}&nbsp;{proofGenerating && <Spinner size={"xs"}/>}</Button>
                                 </Box>
                             </Box>
                             <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
@@ -217,7 +252,12 @@ function App() {
                                     background='rgb(244, 249, 249)'
                                     mb={"30px"}
                                 />
-                                <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
+
+                                <Box display={'flex'} flexDirection={'row'} gap={'10px'} alignItems={"center"}>
+
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
+                                </Box>
+
                             </Box>
                         </Box>
                     </Box>
