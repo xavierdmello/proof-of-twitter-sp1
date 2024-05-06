@@ -5,6 +5,11 @@ use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use actix_cors::Cors;
 use http::StatusCode;
 use serde_json::from_str;
+use std::thread;
+use std::time::Duration;
+use std::process::Command;
+use tokio::task;
+use tokio::time::sleep;
 
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
 
@@ -30,14 +35,14 @@ async fn hello() -> impl Responder {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct RequestBody {
     email: String,
     eth_address: String,
 }
 #[post("/prove")]
-async fn prove(req_body: String) -> impl Responder {
-    println!("{}", req_body);
 
+async fn prove(req_body: String) -> impl Responder {
     // Parse the request body JSON string into the RequestBody struct
     let request_data: RequestBody = serde_json::from_str(&req_body).expect("failed to parse request body");
 
@@ -45,8 +50,12 @@ async fn prove(req_body: String) -> impl Responder {
     let email = request_data.email;
     let eth_address = request_data.eth_address;
 
-    let dkim = generate_dkim(email);
-    let proof_json = generate_proof(&dkim, eth_address);
+    let dkim = generate_dkim(email).await;
+
+    let proof_json = tokio::task::spawn_blocking(move || generate_proof(&dkim, eth_address))
+        .await
+        .expect("failed to generate proof");
+
     HttpResponse::build(StatusCode::OK).content_type("application/json").body(proof_json)
 }
 
@@ -83,13 +92,15 @@ fn generate_proof(dkim: &DKIM, eth_address: String) -> String {
     // let input_address = "0x7e4a3edd2F6C516166b4C615884b69B7dbfF3fE5";
 
     // Generate proof.
+    println!("Before blow up...");
     let mut stdin = SP1Stdin::new();
     stdin.write(&dkim);
     stdin.write(&eth_address);
-
+    println!("Write sp1 done blow up...");
     let client = ProverClient::new();
+    println!("Client made");
     let (pk, vk) = client.setup(ELF);
-
+    println!("Client setup from ELF");
     println!("Generating proof...");
     let mut proof = client.prove(&pk, stdin).expect("proving failed");
     println!("Proof finished generating");
@@ -122,7 +133,43 @@ fn generate_proof(dkim: &DKIM, eth_address: String) -> String {
     proof_json
 }
 
-fn generate_dkim(email: String) -> DKIM {
-    
+
+async fn generate_dkim(email: String) -> DKIM {
+    // Save email as email.eml in ../node-scripts/
+    let write_email = web::block(move || {
+        fs::write("../node-scripts/email.eml", email).expect("failed to write email.eml");
+    });
+    write_email.await.expect("failed to write email.eml");
+
+    // Change the working directory to ../node-scripts and run generate-dkim.js
+    let run_script = task::spawn_blocking(|| {
+        Command::new("sh")
+            .arg("-c")
+            .arg("cd ../node-scripts && node generate-dkim.js")
+            .spawn()
+            .expect("failed to run generate-dkim.js")
+            .wait()
+            .expect("failed to wait for generate-dkim.js");
+    });
+    run_script.await.expect("failed to run generate-dkim.js");
+
+    // Watch for dkim.json in ../node-scripts/
+    let dkim_path = "../node-scripts/dkim.json";
+    let read_dkim = loop {
+        let metadata_result = web::block(move || fs::metadata(dkim_path)).await;
+        if metadata_result.is_ok() {
+            break web::block(move || {
+                let dkim_json = fs::read_to_string(dkim_path).expect("failed to read dkim.json");
+                let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
+                dkim
+            });
+        }
+        sleep(std::time::Duration::from_millis(500)).await;
+    };
+
+    let dkim = read_dkim.await.expect("failed to read dkim.json");
+
+    // Return DKIM object
+    dkim
 }
 

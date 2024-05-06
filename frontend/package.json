@@ -20,7 +20,9 @@
     "@zk-email/contracts": "^6.0.2",
     "@zk-email/helpers": "^6.0.2",
     "axios": "^1.6.8",
+    "buffer": "^6.0.3",
     "framer-motion": "^11.1.7",
+    "patch-package": "^8.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
