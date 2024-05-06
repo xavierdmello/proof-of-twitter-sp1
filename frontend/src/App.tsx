@@ -13,6 +13,16 @@ function App() {
     const [proof, setProof] = useState<string>('');
     const [ethAddress, setEthAddress] = useState<string>('');
 
+    async function handleGenerateProof() {
+        // timeout: 10 mins
+        const response = await axios.post("http://127.0.0.1:8000/prove", {email, ethAddress}, {timeout: 600000});
+        console.log(response.data)
+    }
+
+    function handleVerifyProof() {
+
+    }
+
     return (
         <Box backgroundColor={'rgb(244, 249, 249)'} height={'100vh'} width={'100vw'} p="10px">
             <Box
@@ -192,7 +202,7 @@ function App() {
                                 <Heading fontWeight={"400"} size={'sm'}>Ethereum address to associate with twitter handle</Heading>
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'}>
                                     <Input background='rgb(244, 249, 249)' value={ethAddress} placeholder={"Ethereum Address (0x...)"} onChange={e => setEthAddress(e.target.value)} width={'100%'}></Input>
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} width={'40%'} minW={"180px"}>GENERATE PROOF</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} width={'40%'} minW={"180px"} onClick={handleGenerateProof}>GENERATE PROOF</Button>
                                 </Box>
                             </Box>
                             <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
@@ -207,7 +217,7 @@ function App() {
                                     background='rgb(244, 249, 249)'
                                     mb={"30px"}
                                 />
-                                <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
+                                <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
                             </Box>
                         </Box>
                     </Box>

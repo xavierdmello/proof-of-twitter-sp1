@@ -5,10 +5,12 @@ name = "backend-script"
 edition = "2021"
 
 [dependencies]
-rocket = "0.5.0"
+actix-cors = "0.7.0"
+actix-web = "4.5.1"
 serde = "1.0.200"
 serde_json = "1.0.116"
 sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git" }
+http = "0.2.12"
 
 [build-dependencies]
 sp1-helper = { git = "https://github.com/succinctlabs/sp1.git" }
