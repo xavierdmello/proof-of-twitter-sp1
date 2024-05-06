@@ -59,8 +59,7 @@ function App() {
 
                 <Box width={"100%"} maxW={'1200px'} zIndex={2} flexDirection={"column"} marginX={'auto'} display="flex" flexGrow={1}>
                     <Divider />
-                    <br/>
-                    <Box flexGrow={1} display={"flex"} gap={"40px"} flexDirection={"row"}>
+                    <Box flexGrow={1} alignItems="center" display={"flex"} gap={"40px"} flexDirection={"row"} >
                         <Box width={"30%"}>
                             <Heading fontWeight={"300"} fontSize={"20px"}>Prove you own a Twitter handle by verifying a confirmation email from Twitter.
                          </Heading>
@@ -70,49 +69,108 @@ function App() {
                                 performance.</Heading>
                         </Box>
                         <Box width="70%">
-                            <List spacing={2} >
+                            <List spacing={2}>
                                 <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"} paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
+                                    <Box
+                                        fontFamily={"IBM Plex Mono"}
+                                        fontWeight={"bold"}
+                                        paddingLeft={"15px"}
+                                        paddingRight={"15px"}
+                                        display={"flex"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        backgroundColor={'white'}
+                                        opacity={"0.6"}
+                                        color={"black"}
+                                        borderRadius={"md"}
+                                    >
                                         <Text textAlign={"center"}>1</Text>
                                     </Box>
-                                    <Box width={"100%"}  backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"}>
+                                    <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
                                         Send yourself a <Link href={"https://twitter.com/account/begin_password_reset"} isExternal> password reset email<ExternalLinkIcon mx='2px' /></Link> from Twitter. (Twitter names with emoji might fail to pass DKIM verification)
                                     </Box>
                                 </ListItem>
                                 <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"} paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
+                                    <Box
+                                        fontFamily={"IBM Plex Mono"}
+                                        fontWeight={"bold"}
+                                        paddingLeft={"15px"}
+                                        paddingRight={"15px"}
+                                        display={"flex"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        backgroundColor={'white'}
+                                        opacity={"0.6"}
+                                        color={"black"}
+                                        borderRadius={"md"}
+                                    >
                                         <Text textAlign={"center"}>2</Text>
                                     </Box>
-                                    <Box width={"100%"}  backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"}>
+                                    <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
                                         In your inbox, find the email from Twitter and click the three dot menu, then "Show original" then "Copy to clipboard". If on Outlook, download the original email as .eml and copy it instead.
                                     </Box>
                                 </ListItem>
                                 <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"} paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
+                                    <Box
+                                        fontFamily={"IBM Plex Mono"}
+                                        fontWeight={"bold"}
+                                        paddingLeft={"15px"}
+                                        paddingRight={"15px"}
+                                        display={"flex"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        backgroundColor={'white'}
+                                        opacity={"0.6"}
+                                        color={"black"}
+                                        borderRadius={"md"}
+                                    >
                                         <Text textAlign={"center"}>3</Text>
                                     </Box>
-                                    <Box width={"100%"}  backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"}>
-                                        Copy paste or drop that into the box below. Note that we cannot use this to phish you: we do not know your password.</Box>
+                                    <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
+                                        Copy paste or drop that into the box below. Note that we cannot use this to phish you: we do not know your password.
+                                    </Box>
                                 </ListItem>
                                 <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"}  paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
+                                    <Box
+                                        fontFamily={"IBM Plex Mono"}
+                                        fontWeight={"bold"}
+                                        paddingLeft={"15px"}
+                                        paddingRight={"15px"}
+                                        display={"flex"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        backgroundColor={'white'}
+                                        opacity={"0.6"}
+                                        color={"black"}
+                                        borderRadius={"md"}
+                                    >
                                         <Text textAlign={"center"}>4</Text>
                                     </Box>
-                                    <Box width={"100%"}  backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"}  padding={"5px"}>Paste in your sending Ethereum address. This associates your twitter handle with an ethereum address and ensures that no one else can "steal" your proof for another account </Box>
+                                    <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
+                                        Paste in your sending Ethereum address. This associates your twitter handle with an ethereum address and ensures that no one else can "steal" your proof for another account
+                                    </Box>
                                 </ListItem>
-                                <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"} paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
+                                <ListItem minH={"60px"} display={"flex"} gap={"5px"}>
+                                    <Box
+                                        fontFamily={"IBM Plex Mono"}
+                                        fontWeight={"bold"}
+                                        paddingLeft={"15px"}
+                                        paddingRight={"15px"}
+                                        display={"flex"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        backgroundColor={'white'}
+                                        opacity={"0.6"}
+                                        color={"black"}
+                                        borderRadius={"md"}
+
+                                    >
                                         <Text textAlign={"center"}>5</Text>
                                     </Box>
-                                    <Box backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} width={"100%"} padding={"5px"}>Click <b>"Generate Proof"</b>. Share this to privately prove your Twitter handle ownership!</Box>
-                                </ListItem>
-                                <ListItem display={"flex"} gap={"5px"}>
-                                    <Box fontFamily={"IBM Plex Mono"} fontWeight={"bold"} paddingLeft={"15px"} paddingRight={"15px"} display={"flex"} justifyContent={"center"} alignItems={"center"}  backgroundColor={'rgb(232, 254, 86)'} color={"black"} borderRadius={"md"} >
-                                        <Text textAlign={"center"}>6</Text>
+                                    <Box display={{lg: "flex"}} alignItems={"center"}   backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} width={"100%"} padding={"5px"} opacity={"0.8"}>
+                                        Click&nbsp;<b>"Generate Proof"</b>. Share this to privately prove your Twitter handle ownership!
                                     </Box>
-                                    <Box backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} width={"100%"} padding={"5px"}>Click <b>"Verify Proof"</b>. You can also verify other people's proofs.</Box>
                                 </ListItem>
-
 
                             </List>
                         </Box>
