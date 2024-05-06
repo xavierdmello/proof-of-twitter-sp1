@@ -27,7 +27,7 @@ function App() {
             const duration = endTime - startTime;
             const minutes = Math.floor(duration / 60000);
             const seconds = Math.floor((duration % 60000) / 1000);
-
+            setProof(JSON.stringify(response.data))
             toast({
                 title: 'Proof Generated',
                 description: `Proof Of Twitter Created (${minutes}m${seconds}s)`,
