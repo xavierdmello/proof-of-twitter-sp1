@@ -66,6 +66,7 @@ const theme = extendTheme({
             color: "white"
           },
         },
+
       },
     },
   },

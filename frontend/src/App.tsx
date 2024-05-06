@@ -11,7 +11,7 @@ function App() {
     const [email, setEmail] = useState<string>('');
     const [proof, setProof] = useState<string>('');
     const [ethAddress, setEthAddress] = useState<string>('');
-    const [proofGenerating, setProofGenerating] = useState<bool>(false);
+    const [proofGenerating, setProofGenerating] = useState<boolean>(false);
     const toast = useToast()
 
     async function handleGenerateProof() {
@@ -237,7 +237,7 @@ function App() {
                                 <Heading fontWeight={"400"} size={'sm'}>Ethereum address to associate with twitter handle</Heading>
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'}>
                                     <Input background='rgb(244, 249, 249)' value={ethAddress} placeholder={"Ethereum Address (0x...)"} onChange={e => setEthAddress(e.target.value)} width={'100%'}></Input>
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} width={'40%'} minW={proofGenerating ? "220px" : "220px"} onClick={handleGenerateProof}>{proofGenerating ? "GENERATING PROOF" : "GENERATE PROOF"}&nbsp;{proofGenerating && <Spinner size={"xs"}/>}</Button>
+                                    <Button  backgroundColor={'rgb(232, 254, 86)'} isDisabled={proofGenerating} color={'rgb(5, 14, 22)'} width={'40%'} minW="220px" onClick={handleGenerateProof}>{proofGenerating ? "GENERATING PROOF" : "GENERATE PROOF"}&nbsp;{proofGenerating && <Spinner size={"xs"}/>}</Button>
                                 </Box>
                             </Box>
                             <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
