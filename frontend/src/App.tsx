@@ -1,5 +1,22 @@
 import { useState } from "react";
-import { Textarea, Box, Heading, Text, Highlight, Input, Button, List, ListItem, Link, Divider, Spinner, useToast } from "@chakra-ui/react";
+import {
+  Textarea,
+  FormControl,
+  Box,
+  Heading,
+  Text,
+  Highlight,
+  FormLabel,
+  Input,
+  Button,
+  List,
+  ListItem,
+  Link,
+  Divider,
+  Spinner,
+  useToast,
+  chakra,
+} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import axios, { AxiosError } from "axios";
 
@@ -237,7 +254,7 @@ function App() {
           <Box flexGrow={1} alignItems="center" display={"flex"} gap={"40px"} flexDirection={"row"}>
             <Box width={"30%"}>
               <Heading fontWeight={"300"} fontSize={"20px"}>
-                Prove you own a Twitter handle by verifying a confirmation email from Twitter.
+                dsadsaProve you own a Twitter handle by verifying a confirmation email from Twitter.
               </Heading>
               <br />
               <Heading fontWeight={"300"} fontSize={"17px"}>
@@ -418,7 +435,34 @@ function App() {
                 {/*    background='rgb(244, 249, 249)'*/}
                 {/*    mb={"30px"}*/}
                 {/*/>*/}
-
+                <FormControl isRequired>
+                  <FormLabel>Some File</FormLabel>
+                  <chakra.input
+                    type="file"
+                    w="100%"
+                    p="2"
+                    borderColor="grey.100"
+                    borderRadius="md"
+                    textColor="gray.500"
+                    borderWidth="1px"
+                    as={"input"}
+                    css={{
+                      "&::file-selector-button": {
+                        alignItems: "center",
+                        textAlign: "center",
+                        display: "none",
+                        backgroundColor: "blue.400",
+                        _hover: {
+                          backgroundColor: "blue.500",
+                        },
+                        _active: {
+                          backgroundColor: "blue.600",
+                        },
+                      },
+                    }}
+                    placeholder="Suyash"
+                  />
+                </FormControl>
                 <Box display={"flex"} flexDirection={"row"} gap={"10px"} alignItems={"center"}>
                   <Button
                     backgroundColor={"rgb(232, 254, 86)"}
