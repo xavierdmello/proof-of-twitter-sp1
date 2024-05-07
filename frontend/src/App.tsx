@@ -99,6 +99,11 @@ function App() {
                 },
             });
             const result: VerificationResult = response.data;
+            console.log("IM AMAZON!!")
+            console.log(result)
+            console.log(result.eth_address)
+            console.log(result.twitter_handle)
+            console.log(result.proof_valid)
             setVerificationResult(result);
 
             if (result.proof_valid) {
