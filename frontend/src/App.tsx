@@ -101,10 +101,10 @@ function App() {
             const result: VerificationResult = response.data;
             setVerificationResult(result);
 
-            if (result.proof_valid) {
+            if (result.proofValid) {
                 toast({
                     title: 'Proof Verified',
-                    description: `${result.twitter_handle} belongs to ${result.eth_address}`,
+                    description: `${result.twitterHandle} belongs to ${result.ethAddress}`,
                     status: 'success',
                     duration: 9000,
                     isClosable: true,
