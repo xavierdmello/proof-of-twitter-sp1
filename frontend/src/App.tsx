@@ -9,7 +9,7 @@ import axios from 'axios';
 
 function App() {
     const [email, setEmail] = useState<string>('');
-    const [proof, setProof] = useState<string>('');
+    const [proof, setProof] = useState<Blob>();
     const [ethAddress, setEthAddress] = useState<string>('');
     const [proofGenerating, setProofGenerating] = useState<boolean>(false);
     const toast = useToast()
@@ -22,12 +22,18 @@ function App() {
         const startTime = new Date().getTime();
 
         try {
-            response = await axios.post("http://127.0.0.1:8000/prove", { email, ethAddress }, { timeout: 600000 });
+            response = await axios.post("http://127.0.0.1:8000/prove", { email, ethAddress }, {
+                timeout: 600000,
+                responseType: 'blob', // Set the response type to 'blob' (binary data)
+            });
             const endTime = new Date().getTime();
             const duration = endTime - startTime;
             const minutes = Math.floor(duration / 60000);
             const seconds = Math.floor((duration % 60000) / 1000);
-            setProof(JSON.stringify(response.data))
+
+            // Create a Blob from the response data
+            const proofBlob = new Blob([response.data], { type: 'application/json' });
+            setProof(proofBlob)
             toast({
                 title: 'Proof Generated',
                 description: `Proof Of Twitter Created (${minutes}m${seconds}s)`,
@@ -51,7 +57,31 @@ function App() {
         }
 
         setProofGenerating(false);
+    }
 
+    function handleDownloadProof() {
+        if (proof) {
+            // Create a Blob from the proof string
+            const proofBlob = new Blob([proof], { type: 'application/json' });
+
+            // Create a temporary URL for the Blob
+            const url = window.URL.createObjectURL(proofBlob);
+
+            // Create a link element
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'proof-with-io.json';
+
+            // Append the link to the document body
+            document.body.appendChild(link);
+
+            // Programmatically click the link to trigger the download
+            link.click();
+
+            // Clean up the temporary URL and remove the link from the document body
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+        }
     }
 
     function handleVerifyProof() {
@@ -243,19 +273,20 @@ function App() {
                             <Box display={'flex'} gap='10px' flexDirection={'column'} width={"100%"}>
                                 <Heading fontWeight={"400"} size={'lg'}>Verify Proof</Heading>
                                 <Heading fontWeight={"400"} size={'sm'}>Verify a twitter proof</Heading>
-                                <Textarea
-                                    onChange={e => setProof(e.target.value)}
-                                    value={proof}
-                                    size="md"
-                                    minH="200px"
-                                    placeholder='Twitter Proof'
-                                    background='rgb(244, 249, 249)'
-                                    mb={"30px"}
-                                />
+                                {/*<Textarea*/}
+                                {/*    onChange={e => setProof(e.target.value)}*/}
+                                {/*    value={proof}*/}
+                                {/*    size="md"*/}
+                                {/*    minH="200px"*/}
+                                {/*    placeholder='Twitter Proof'*/}
+                                {/*    background='rgb(244, 249, 249)'*/}
+                                {/*    mb={"30px"}*/}
+                                {/*/>*/}
 
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'} alignItems={"center"}>
 
                                     <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleDownloadProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>DOWNLOAD PROOF</Button>
                                 </Box>
 
                             </Box>

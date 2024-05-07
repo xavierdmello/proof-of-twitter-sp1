@@ -56,7 +56,14 @@ async fn prove(req_body: String) -> impl Responder {
         .await
         .expect("failed to generate proof");
 
-    HttpResponse::build(StatusCode::OK).content_type("application/json").body(proof_json)
+    // Read the proof file
+    let proof_file = tokio::fs::read("proof-with-io.json").await.expect("failed to read proof file");
+
+    // Send the proof file as an attachment
+    HttpResponse::build(StatusCode::OK)
+        .content_type("application/json")
+        .append_header(("Content-Disposition", "attachment; filename=\"proof-with-io.json\""))
+        .body(proof_file)
 }
 
 async fn manual_hello() -> impl Responder {
@@ -85,18 +92,16 @@ async fn main() -> std::io::Result<()> {
 }
 use serde_json;
 
-fn generate_proof(dkim: &DKIM, eth_address: String) -> String {
+fn generate_proof(dkim: &DKIM, eth_address: String) {
     // Load JSON circuit inputs
     // let input_json = fs::read_to_string("dkim.json").expect("failed to read dkim.json");
     // let dkim: DKIM = serde_json::from_str(&input_json).expect("failed to parse dkim.json");
     // let input_address = "0x7e4a3edd2F6C516166b4C615884b69B7dbfF3fE5";
 
     // Generate proof.
-    println!("Before blow up...");
     let mut stdin = SP1Stdin::new();
     stdin.write(&dkim);
     stdin.write(&eth_address);
-    println!("Write sp1 done blow up...");
     let client = ProverClient::new();
     println!("Client made");
     let (pk, vk) = client.setup(ELF);
@@ -125,12 +130,10 @@ fn generate_proof(dkim: &DKIM, eth_address: String) -> String {
     // Verify proof.
     client.verify(&proof, &vk).expect("verification failed");
 
-    // Serialize proof to JSON string.
-    let proof_json = serde_json::to_string(&proof).expect("failed to serialize proof");
-
+    // Save proof file to be sent to frontend.
+    proof.save("proof-with-io.json").expect("saving proof failed");
+    
     println!("Successfully generated and verified proof for the program!");
-
-    proof_json
 }
 
 
