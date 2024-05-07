@@ -9,7 +9,7 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 ## Running Locally
 1. Clone and open repo
 2. `cd ./backend/script`
-3. `cargo run --script start.sh`
+3. `cargo run --script start.sh --release`
    
 #### Prerequisites
 - [`node.js`](https://nodejs.org/en)  
