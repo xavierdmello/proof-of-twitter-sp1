@@ -80,6 +80,12 @@ struct VerificationResult {
 }
 #[post("/verify")]
 async fn verify(req_body: web::Bytes) -> impl Responder {
+    // Delete input_proof_to_be_verified.json if it already exists
+    if fs::metadata("input_proof_to_be_verified.json").is_ok() {
+        fs::remove_file("input_proof_to_be_verified.json")
+            .expect("failed to delete input_proof_to_be_verified.json");
+    }
+
     // Save the proof data to input_proof_to_be_verified.json as binary
     let save_proof = web::block(move || {
         fs::write("input_proof_to_be_verified.json", &req_body)
@@ -114,6 +120,11 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn generate_proof(dkim: &DKIM, eth_address: String) {
+    // Delete proof-with-io.json if it already exists
+    if fs::metadata("proof-with-io.json").is_ok() {
+        fs::remove_file("proof-with-io.json").expect("failed to delete proof-with-io.json");
+    }
+
     // Generate proof.
     let mut stdin = SP1Stdin::new();
     stdin.write(&dkim);
