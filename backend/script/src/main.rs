@@ -1,15 +1,12 @@
 use actix_cors::Cors;
-use actix_web::{get, post, web, web::PayloadConfig, App, HttpResponse, HttpServer, Responder};
+use actix_web::{post, web, web::PayloadConfig, App, HttpResponse, HttpServer, Responder};
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use sp1_sdk::{ProverClient, SP1DefaultProof, SP1ProofWithMetadata, SP1Stdin};
+use sp1_sdk::{ProverClient, SP1ProofWithMetadata, SP1Stdin};
 use std::fs;
-use std::fs::File;
-use std::io::Error;
 use std::process::Command;
 use tokio::task;
-use tokio::time::sleep;
 
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
 
