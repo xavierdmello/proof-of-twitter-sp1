@@ -185,7 +185,7 @@ fn verify_proof() -> VerificationResult {
     }
 }
 
-async fn generate_dkim(email: String) -> Result<DKIM, ()> {
+async fn generate_dkim(email: String) -> Result<DKIM, String> {
     // Save email as email.eml in ../node-scripts/
     let write_email = web::block(move || {
         fs::write("../node-scripts/email.eml", email).expect("failed to write email.eml");
@@ -215,8 +215,14 @@ async fn generate_dkim(email: String) -> Result<DKIM, ()> {
 
     // Read dkim & convert to rust object
     let dkim_path = "../node-scripts/dkim.json";
-    let dkim_json: String = fs::read_to_string(dkim_path).expect("failed to read dkim.json");
-    let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
+    let dkim_json = match fs::read_to_string(dkim_path) {
+        Ok(json) => json,
+        Err(err) => return Err(format!("failed to read dkim.json: {}", err)),
+    };
+    let dkim: DKIM = match serde_json::from_str(&dkim_json) {
+        Ok(dkim) => dkim,
+        Err(err) => return Err(format!("failed to parse dkim.json: {}", err)),
+    };
 
     // Return DKIM object
     Ok(dkim)
