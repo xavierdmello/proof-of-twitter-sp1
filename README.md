@@ -15,6 +15,9 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 - [`rust`](https://www.rust-lang.org/)
 - [`sp1`](https://succinctlabs.github.io/sp1/getting-started/install.html)
 - a `c` linker for compiling rust. not sure? run `sudo apt-get update && sudo apt install build-essential`
+- `libssl-dev`: `sudo apt-get install libssl-dev`
+- `pkg-config`: `sudo apt-get install pkg-config`
+
 #### Getting Started
 1. Clone and open repo
 2. Run `./start.sh`
