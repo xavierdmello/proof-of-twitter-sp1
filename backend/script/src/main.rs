@@ -80,26 +80,13 @@ struct VerificationResult {
 }
 #[post("/verify")]
 async fn verify(req_body: web::Bytes) -> impl Responder {
-    // // Save the proof data to input_proof_to_be_verified.json as binary
-    // let save_proof = web::block(move || {
-    //     fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
-    // });
-    // save_proof.await.expect("failed to save proof");
-    // 
-    // // Load the proof into SP1ProofWithMetadata variable
-    // let load_proof = web::block(move || {
-    //     let proof = SP1ProofWithMetadata::load("proof-with-io.json").expect("failed to load proof");
-    //     proof
-    // });
-    // let proof = load_proof.await.expect("failed to load proof");
-    // println!("got proof in shit");
-    // let mut proof: SP1ProofWithMetadata<SP1DefaultProof> = serde_json::from_slice(&req_body).unwrap();
-    // let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
-    // println!("loaded proof");
+    // Save the proof data to input_proof_to_be_verified.json as binary
+    let save_proof = web::block(move || {
+        fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
+    });
+    save_proof.await.expect("failed to save proof");
     
-    // Call the verify_proof function
-    // let verification_result = verify_proof();
-        // Generate proof (will be saved to proof-with-io.json)
+    // Call verify proof function
     let verification_result = tokio::task::spawn_blocking(move || verify_proof())
         .await
         .expect("failed to verify proof");
@@ -172,7 +159,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 fn verify_proof() -> VerificationResult {
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
-    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
+    let mut proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").unwrap();
 
     // Verify proof.
     client.verify(&proof, &vk).expect("verification failed");
