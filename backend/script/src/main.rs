@@ -11,6 +11,7 @@ use std::process::Command;
 use tokio::task;
 use tokio::time::sleep;
 
+
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -109,13 +110,11 @@ async fn verify(req_body: web::Bytes) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::permissive();
-
         App::new()
             .wrap(cors)
-            .service(hello)
-            .service(prove)
+            .app_data(PayloadConfig::new(1024 * 1024 * 20)) // Set the payload size limit to 20MB
             .service(verify)
-            .route("/hey", web::get().to(manual_hello))
+            .service(prove)
     })
         .bind(("127.0.0.1", 8000))?
         .run()
