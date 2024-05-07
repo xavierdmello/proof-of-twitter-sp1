@@ -11,7 +11,7 @@ function App() {
   const [proofGenerating, setProofGenerating] = useState<boolean>(false);
   const [proofVerifying, setProofVerifying] = useState<boolean>(false);
   const [verificationResult, setVerificationResult] = useState<VerificationResult>();
-
+  const [proofFileName, setProofFileName] = useState("");
   const toast = useToast();
 
   type VerificationResult = {
@@ -66,6 +66,7 @@ function App() {
 
       // Create a Blob from the response data
       const proofBlob = new Blob([response.data], { type: "application/json" });
+      setProofFileName("proof-with-io.json");
       setProof(proofBlob);
       toast({
         title: "Proof Generated",
@@ -121,7 +122,7 @@ function App() {
     // Create a link element
     const link = document.createElement("a");
     link.href = url;
-    link.download = "proof-with-io.json";
+    link.download = proofFileName;
 
     // Append the link to the document body
     document.body.appendChild(link);
@@ -139,6 +140,7 @@ function App() {
     reader.onloadend = () => {
       if (reader.result instanceof ArrayBuffer) {
         const blob = new Blob([reader.result], { type: file.type });
+        setProofFileName(file.name);
         setProof(blob);
       } else {
         console.error("Failed to read the file as ArrayBuffer.");
@@ -443,7 +445,7 @@ function App() {
                 {/*    background='rgb(244, 249, 249)'*/}
                 {/*    mb={"30px"}*/}
                 {/*/>*/}
-                <Dropzone onFileAccepted={handleFileAccepted} />
+                <Dropzone onFileAccepted={handleFileAccepted} proofFileName={proofFileName} />
 
                 <Box display={"flex"} flexDirection={"row"}>
                   {verificationResult !== undefined && (

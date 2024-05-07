@@ -6,9 +6,10 @@ import { px } from "framer-motion";
 
 interface DropzoneProps {
   onFileAccepted: (file: File) => void;
+  proofFileName: string;
 }
 
-export default function Dropzone({ onFileAccepted }: DropzoneProps) {
+export default function Dropzone({ onFileAccepted, proofFileName }: DropzoneProps) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       onFileAccepted(acceptedFiles[0]);
@@ -23,8 +24,10 @@ export default function Dropzone({ onFileAccepted }: DropzoneProps) {
     multiple: false,
   });
 
-  const dropText = isDragActive ? "Drop files here..." : "Drag a twitter proof here, or click to select files";
-
+  let dropText = isDragActive ? "Drop files here..." : "Drag a twitter proof here, or click to select files";
+  if (proofFileName.length > 0) {
+    dropText = proofFileName;
+  }
   const activeBg = useColorModeValue("gray.600", "gray.600");
   const borderColor = useColorModeValue(isDragActive ? "rgb(232, 254, 86)" : "gray.500", isDragActive ? "rgb(232, 254, 86)" : "gray.500");
 
