@@ -2,10 +2,11 @@
 use sp1_sdk::{ProverClient, SP1ProofWithMetadata, SP1Stdin, SP1DefaultProof};
 use serde::{Deserialize, Serialize};
 use std::fs;
-use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
+use std::fs::File;
+use actix_web::{post,get, web, App, HttpResponse, HttpServer, Responder, web::PayloadConfig};
 use actix_cors::Cors;
 use http::StatusCode;
-
+use serde_json;
 use std::process::Command;
 use tokio::task;
 use tokio::time::sleep;
@@ -32,6 +33,13 @@ struct DKIM {
 struct ProveRequestBody {
     email: String,
     eth_address: String,
+}
+async fn manual_hello() -> impl Responder {
+    HttpResponse::Ok().body("Hey there!")
+}
+#[get("/")]
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
 }
 
 // Generate proof, save to a binary file, and returned to frontend
@@ -71,19 +79,22 @@ struct VerificationResult {
 }
 #[post("/verify")]
 async fn verify(req_body: web::Bytes) -> impl Responder {
-    // Save the proof data to input_proof_to_be_verified.json as binary
-    let save_proof = web::block(move || {
-        fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
-    });
-    save_proof.await.expect("failed to save proof");
+    // // Save the proof data to input_proof_to_be_verified.json as binary
+    // let save_proof = web::block(move || {
+    //     fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
+    // });
+    // save_proof.await.expect("failed to save proof");
+    // 
+    // // Load the proof into SP1ProofWithMetadata variable
+    // let load_proof = web::block(move || {
+    //     let proof = SP1ProofWithMetadata::load("proof-with-io.json").expect("failed to load proof");
+    //     proof
+    // });
+    // let proof = load_proof.await.expect("failed to load proof");
 
-    // Load the proof into SP1ProofWithMetadata variable
-    let load_proof = web::block(|| {
-        let proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").expect("failed to load proof");
-        proof
-    });
-    let proof = load_proof.await.expect("failed to load proof");
-
+    let proof: SP1ProofWithMetadata<SP1DefaultProof> = serde_json::from_slice(&req_body).unwrap();
+    println!("loaded proof");
+    
     // Call the verify_proof function
     let verification_result = verify_proof(&proof);
 
@@ -99,27 +110,24 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:5173")
-            .allowed_methods(vec!["POST"])
+            .allowed_methods(vec!["GET", "POST"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
             .allowed_header(http::header::CONTENT_TYPE)
             .max_age(3600);
 
         App::new()
             .wrap(cors)
-            .service(verify)
+            .service(hello)
             .service(prove)
+            .service(verify)
+            .route("/hey", web::get().to(manual_hello))
     })
         .bind(("127.0.0.1", 8000))?
         .run()
         .await
 }
-use serde_json;
 
 fn generate_proof(dkim: &DKIM, eth_address: String) {
-    // Load JSON circuit inputs
-    // let input_json = fs::read_to_string("dkim.json").expect("failed to read dkim.json");
-    // let dkim: DKIM = serde_json::from_str(&input_json).expect("failed to parse dkim.json");
-    // let input_address = "0x7e4a3edd2F6C516166b4C615884b69B7dbfF3fE5";
 
     // Generate proof.
     let mut stdin = SP1Stdin::new();
@@ -130,7 +138,10 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     let (pk, vk) = client.setup(ELF);
     println!("Client setup from ELF");
     println!("Generating proof...");
-    let mut proof = client.prove(&pk, stdin).expect("proving failed");
+    // let mut proof = client.prove(&pk, stdin).expect("proving failed");
+    println!("Loading proof");
+    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
+    println!("Stopped loading proof");
     println!("Proof finished generating");
 
     // Read output.
@@ -155,7 +166,6 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 
     // Save proof file to be sent to frontend.
     proof.save("proof-with-io.json").expect("saving proof failed");
-
     println!("Successfully generated and verified proof for the program!");
 }
 

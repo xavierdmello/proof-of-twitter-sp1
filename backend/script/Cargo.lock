@@ -985,6 +985,7 @@ version = "0.1.0"
 dependencies = [
  "actix-cors",
  "actix-web",
+ "bincode",
  "http 0.2.12",
  "serde",
  "serde_json",

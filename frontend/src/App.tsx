@@ -93,7 +93,11 @@ function App() {
 
     async function handleVerifyProof() {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/verify", { proof });
+            const response = await axios.post("http://127.0.0.1:8000/verify", proof, {
+                headers: {
+                    'Content-Type': 'application/octet-stream',
+                },
+            });
             const result: VerificationResult = response.data;
             setVerificationResult(result);
 
