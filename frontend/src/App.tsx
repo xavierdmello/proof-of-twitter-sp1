@@ -12,7 +12,9 @@ function App() {
     const [proof, setProof] = useState<Blob>();
     const [ethAddress, setEthAddress] = useState<string>('');
     const [proofGenerating, setProofGenerating] = useState<boolean>(false);
+    const [proofVerifying, setProofVerifying] = useState<boolean>(false);
     const [verificationResult, setVerificationResult] = useState<VerificationResult>();
+
     const toast = useToast()
 
     type VerificationResult = {
@@ -92,6 +94,7 @@ function App() {
     }
 
     async function handleVerifyProof() {
+        setProofVerifying(true)
         try {
             const response = await axios.post("http://127.0.0.1:8000/verify", proof, {
                 headers: {
@@ -118,6 +121,7 @@ function App() {
                     isClosable: true,
                 });
             }
+            setProofVerifying(false)
         } catch (e) {
             let message = "Unknown Error"
             if (e instanceof Error) {
@@ -130,6 +134,7 @@ function App() {
                 duration: 9000,
                 isClosable: true,
             });
+            setProofVerifying(false)
         }
     }
 
@@ -330,8 +335,8 @@ function App() {
 
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'} alignItems={"center"}>
 
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>VERIFY PROOF</Button>
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleDownloadProof} minW={"180px"} width={'30%'} marginLeft={"auto"}>DOWNLOAD PROOF</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"220px"} width={'40%'} isDisabled={proofGenerating}  marginLeft={"auto"}>{proofGenerating ? "VERIFYING PROOF" : "VERIFY PROOF"}&nbsp;{proofVerifying && <Spinner size={"xs"}/>}</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleDownloadProof} minW={"220px"} width={'40%'} marginLeft={"auto"}>DOWNLOAD PROOF</Button>
                                 </Box>
 
                             </Box>
