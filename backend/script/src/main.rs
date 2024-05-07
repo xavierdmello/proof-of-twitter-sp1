@@ -213,26 +213,10 @@ async fn generate_dkim(email: String) -> Result<DKIM, ()> {
     });
     run_script.await.expect("failed to run generate-dkim.js");
 
-    // Watch for dkim.json in ../node-scripts/
+    // Read dkim & convert to rust object
     let dkim_path = "../node-scripts/dkim.json";
-    let mut iteration = 0;
-    let read_dkim = loop {
-        let metadata_result = web::block(move || fs::metadata(dkim_path)).await;
-        if metadata_result.is_ok() {
-            break web::block(move || {
-                let dkim_json = fs::read_to_string(dkim_path).expect("failed to read dkim.json");
-                let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
-                dkim
-            });
-        }
-        iteration += 1;
-        if iteration >= 3 {
-            return Err(());
-        }
-        sleep(std::time::Duration::from_millis(500)).await;
-    };
-
-    let dkim = read_dkim.await.expect("failed to read dkim.json");
+    let dkim_json: String = fs::read_to_string(dkim_path).expect("failed to read dkim.json");
+    let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
 
     // Return DKIM object
     Ok(dkim)
