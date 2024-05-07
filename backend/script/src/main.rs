@@ -1,12 +1,10 @@
-use sp1_sdk::{ProverClient, SP1Stdin, utils};
+use sp1_sdk::{ProverClient, SP1Stdin};
 use serde::{Deserialize, Serialize};
 use std::fs;
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
 use actix_cors::Cors;
 use http::StatusCode;
-use serde_json::from_str;
-use std::thread;
-use std::time::Duration;
+
 use std::process::Command;
 use tokio::task;
 use tokio::time::sleep;
@@ -28,23 +26,16 @@ struct DKIM {
     modulus_length: u32, // unused
 }
 
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-struct RequestBody {
+struct ProveRequestBody {
     email: String,
     eth_address: String,
 }
 #[post("/prove")]
-
 async fn prove(req_body: String) -> impl Responder {
     // Parse the request body JSON string into the RequestBody struct
-    let request_data: RequestBody = serde_json::from_str(&req_body).expect("failed to parse request body");
+    let request_data: ProveRequestBody = serde_json::from_str(&req_body).expect("failed to parse request body");
 
     // Access the email and ethAddress fields from the parsed struct
     let email = request_data.email;
@@ -66,23 +57,31 @@ async fn prove(req_body: String) -> impl Responder {
         .body(proof_file)
 }
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+struct VerifyRequestBody {
+    proof: String,
 }
+#[post("/verify")]
+async fn verify(req_body: String) -> impl Responder {
+    
+}
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:5173")
-            .allowed_methods(vec!["GET", "POST"])
+            .allowed_methods(vec!["POST"])
             .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
             .allowed_header(http::header::CONTENT_TYPE)
             .max_age(3600);
 
         App::new()
             .wrap(cors)
-            .service(hello)
+            .service(verify)
             .service(prove)
             .route("/hey", web::get().to(manual_hello))
     })
@@ -132,7 +131,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 
     // Save proof file to be sent to frontend.
     proof.save("proof-with-io.json").expect("saving proof failed");
-    
+
     println!("Successfully generated and verified proof for the program!");
 }
 

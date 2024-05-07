@@ -12,7 +12,14 @@ function App() {
     const [proof, setProof] = useState<Blob>();
     const [ethAddress, setEthAddress] = useState<string>('');
     const [proofGenerating, setProofGenerating] = useState<boolean>(false);
+    const [verificationResult, setVerificationResult] = useState<VerificationResult>();
     const toast = useToast()
+
+    type VerificationResult = {
+        twitter_handle: string,
+        eth_address: string,
+        proof_valid: boolean
+    }
 
     async function handleGenerateProof() {
         // timeout: 10 mins
@@ -84,8 +91,42 @@ function App() {
         }
     }
 
-    function handleVerifyProof() {
+    async function handleVerifyProof() {
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/verify", { proof });
+            const result: VerificationResult = response.data;
+            setVerificationResult(result);
 
+            if (result.proof_valid) {
+                toast({
+                    title: 'Proof Verified',
+                    description: `${result.twitter_handle} belongs to ${result.eth_address}`,
+                    status: 'success',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Proof Invalid',
+                    description: `Proof failed verification`,
+                    status: 'warning',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            }
+        } catch (e) {
+            let message = "Unknown Error"
+            if (e instanceof Error) {
+                message = e.message
+            }
+            toast({
+                title: 'Error Verifying Proof',
+                description: message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            });
+        }
     }
 
     return (
