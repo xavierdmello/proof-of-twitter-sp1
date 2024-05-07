@@ -121,7 +121,7 @@ function App() {
                     isClosable: true,
                 });
             }
-            setProofVerifying(false)
+       
         } catch (e) {
             let message = "Unknown Error"
             if (e instanceof Error) {
@@ -134,8 +134,8 @@ function App() {
                 duration: 9000,
                 isClosable: true,
             });
-            setProofVerifying(false)
         }
+        setProofVerifying(false)
     }
 
     return (
