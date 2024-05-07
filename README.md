@@ -8,20 +8,19 @@ Prove ownership of a X (Twitter) account using an email from Twitter. Built on t
 You can use a Password Reset email from Twitter to generate a ZK proof that you own the Twitter acocunt `@username`. Verifying other types emails are possible with SP1 - the password reset email was chosen because of it's simplicity and lack of user generated content.
 
 ## Running Locally
-
-1. Clone and open repo
-2. Run `./start.sh`
-3. Open the frontend by going to http://localhost:5173/ in your browser
-   
-If you're running this on a remote server, you may have to forward ports `5173` (frontend) and `8000` (backend) when ssh'ing in.
-- `ssh -L 5173:localhost:5173 -L 8000:localhost:8000 username@host_ip_address`
-
 #### Prerequisites
 
 - [`node.js`](https://nodejs.org/en)
 - [`yarn`](https://yarnpkg.com/getting-started/install)
 - [`rust`](https://www.rust-lang.org/)
 - [`sp1`](https://succinctlabs.github.io/sp1/getting-started/install.html)
+#### Getting Started
+1. Clone and open repo
+2. Run `./start.sh`
+3. Open the frontend by going to http://localhost:5173/ in your browser
+   
+If you're running this on a remote server, you may have to forward ports `5173` (frontend) and `8000` (backend) when ssh'ing in.
+- `ssh -L 5173:localhost:5173 -L 8000:localhost:8000 username@host_ip_address`
 
 #### Reccomended Specs
 
