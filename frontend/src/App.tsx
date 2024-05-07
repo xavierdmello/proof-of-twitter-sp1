@@ -225,7 +225,7 @@ function App() {
   }
 
   return (
-    <Box backgroundColor={"rgb(244, 249, 249)"} height={"100vh"} width={"100vw"} p="10px">
+    <Box backgroundColor={"rgb(244, 249, 249)"} p="10px" overflow={"auto"}>
       <Box
         width={"100%"}
         borderRadius={"20px"}
@@ -233,6 +233,7 @@ function App() {
         height={"100%"}
         p={"20px"}
         margin={"auto"}
+        minH={"900px"}
         display={"flex"}
         flexDirection={"column"}
         gap={"15px"}
