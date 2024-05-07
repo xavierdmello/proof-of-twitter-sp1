@@ -6,11 +6,11 @@ cd ../../frontend
 # Install packages with yarn
 yarn install
 
-# Start frontend
-yarn dev
+# Start frontend server in background
+yarn dev &
 
 # Change to node.js directory
-cd ../backend/node-script
+cd ../backend/node-scripts
 
 # Install packages with yarn
 yarn install
@@ -21,5 +21,8 @@ yarn patch-package
 # Change back to the project root
 cd ../script
 
-# Start backend server
-cargo run --release
+# Start backend server in background
+cargo run --release &
+
+# Wait for both processes to finish
+wait
