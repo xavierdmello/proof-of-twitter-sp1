@@ -14,8 +14,13 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 - [`rust`](https://www.rust-lang.org/)
 - [`sp1`](https://succinctlabs.github.io/sp1/getting-started/install.html)
 
+
 #### Reccomended Specs
 64GB+ of ram
+
+
+**Note:** If you're running this on a remote server, you may have to forward ports `5173` (frontend) and `8000` (backend).
+- `ssh -L 5173:localhost:5173 -L 8000:localhost:8000 username@host_ip_address`
 
 ## Future Prospects
 This project is a scrappy proof-of-concept to demonstrate what is possible with ZKPs. Under the hood, there are plenty of optimizations that could make proof generation even faster:
