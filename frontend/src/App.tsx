@@ -16,9 +16,9 @@ function App() {
     const toast = useToast()
 
     type VerificationResult = {
-        twitter_handle: string,
-        eth_address: string,
-        proof_valid: boolean
+        twitterHandle: string,
+        ethAddress: string,
+        proofValid: boolean
     }
 
     async function handleGenerateProof() {
@@ -99,11 +99,6 @@ function App() {
                 },
             });
             const result: VerificationResult = response.data;
-            console.log("IM AMAZON!!")
-            console.log(result)
-            console.log(result.eth_address)
-            console.log(result.twitter_handle)
-            console.log(result.proof_valid)
             setVerificationResult(result);
 
             if (result.proof_valid) {
