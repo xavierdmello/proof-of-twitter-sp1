@@ -81,13 +81,13 @@ struct VerificationResult {
 #[post("/verify")]
 async fn verify(req_body: web::Bytes) -> impl Responder {
     // Save the proof data to input_proof_to_be_verified.json as binary
-    // let save_proof = web::block(move || {
-    //     fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
-    // });
-    // save_proof.await.expect("failed to save proof");
+    let save_proof = web::block(move || {
+        fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
+    });
+    save_proof.await.expect("failed to save proof");
     
     // Call verify proof function
-    let verification_result = tokio::task::spawn_blocking(move || verify_proof(&req_body))
+    let verification_result = tokio::task::spawn_blocking(move || verify_proof())
         .await
         .expect("failed to verify proof");
 
@@ -156,10 +156,10 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     println!("Successfully generated and verified proof for the program!");
 }
 
-fn verify_proof(proof_bytes: &web::Bytes) -> VerificationResult {
+fn verify_proof() -> VerificationResult {
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
-    let mut proof = serde_json::from_slice(&proof_bytes).unwrap();
+    let mut proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").unwrap();
 
     // Verify proof.
     client.verify(&proof, &vk).expect("verification failed");
