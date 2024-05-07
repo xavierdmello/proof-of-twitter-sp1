@@ -156,7 +156,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     println!("Successfully generated and verified proof for the program!");
 }
 
-fn verify_proof(proof_bytes: web::Bytes) -> VerificationResult {
+fn verify_proof(proof_bytes: &web::Bytes) -> VerificationResult {
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
     let mut proof = serde_json::from_slice(&proof_bytes).unwrap();
