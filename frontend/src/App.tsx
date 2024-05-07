@@ -354,15 +354,7 @@ function App() {
                   >
                     <Text textAlign={"center"}>5</Text>
                   </Box>
-                  <Box
-                    display={{ lg: "flex" }}
-                    alignItems={"center"}
-                    backgroundColor={"rgb(244, 249, 249)"}
-                    borderRadius={"md"}
-                    width={"100%"}
-                    padding={"5px"}
-                    opacity={"0.8"}
-                  >
+                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
                     Click&nbsp;<b>"Generate Proof"</b> (will take ~4 minutes). Share this to privately prove your Twitter handle ownership!
                   </Box>
                 </ListItem>
