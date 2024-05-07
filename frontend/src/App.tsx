@@ -335,7 +335,7 @@ function App() {
 
                                 <Box display={'flex'} flexDirection={'row'} gap={'10px'} alignItems={"center"}>
 
-                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"220px"} width={'40%'} isDisabled={proofGenerating}  marginLeft={"auto"}>{proofGenerating ? "VERIFYING PROOF" : "VERIFY PROOF"}&nbsp;{proofVerifying && <Spinner size={"xs"}/>}</Button>
+                                    <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleVerifyProof} minW={"220px"} width={'40%'} isDisabled={proofVerifying}  marginLeft={"auto"}>{proofVerifying ? "VERIFYING PROOF" : "VERIFY PROOF"}&nbsp;{proofVerifying && <Spinner size={"xs"}/>}</Button>
                                     <Button backgroundColor={'rgb(232, 254, 86)'} color={'rgb(5, 14, 22)'} onClick={handleDownloadProof} minW={"220px"} width={'40%'} marginLeft={"auto"}>DOWNLOAD PROOF</Button>
                                 </Box>
 
