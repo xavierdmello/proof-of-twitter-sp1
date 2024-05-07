@@ -35,13 +35,6 @@ struct ProveRequestBody {
     email: String,
     eth_address: String,
 }
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
 
 // Generate proof, save to a binary file, and returned to frontend
 #[post("/prove")]

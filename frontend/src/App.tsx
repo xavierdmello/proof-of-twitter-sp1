@@ -6,6 +6,8 @@ import { Textarea, Box, Heading, Text, Highlight, Input, Button,  List,
     UnorderedList,Link, Progress, Divider, Spinner, useToast     } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import axios from 'axios';
+import {AxiosError} from 'axios'
+import { error } from 'console';
 
 function App() {
 const [email, setEmail] = useState<string>('');
@@ -73,19 +75,24 @@ const [email, setEmail] = useState<string>('');
                 duration: 9000,
                 isClosable: true,
             });
-        } catch (e) {
-            let message = "Unknown Error"
-            if (e instanceof Error) {
-                message = e.message
+        } catch (e: Error | AxiosError) {
+            if (axios.isAxiosError(e)) {
+                toast({
+                    title: 'Error',
+                    description: e.response.data,
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Error Generating Proof',
+                    description: e.message,
+                    status: 'error',
+                    duration: 9000,
+                    isClosable: true,
+                });
             }
-            setProofGenerating(false);
-            toast({
-                title: 'Error Generating Proof',
-                description: message,
-                status: 'error',
-                duration: 9000,
-                isClosable: true,
-            });
         }
 
         setProofGenerating(false);
