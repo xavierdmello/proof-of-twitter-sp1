@@ -162,12 +162,14 @@ fn verify_proof() -> VerificationResult {
 
     // Verify proof.
     if client.verify(&proof, &vk).is_ok() {
+        println!("good");
         VerificationResult {
             twitter_handle: twitter_username,
             eth_address: verified_address,
             proof_valid: twitter_proven,
         }
     } else {
+        println!("bad");
         VerificationResult {
             twitter_handle: String::new(),
             eth_address: String::new(),
