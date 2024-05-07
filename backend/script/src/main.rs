@@ -1,4 +1,3 @@
-
 use sp1_sdk::{ProverClient, SP1ProofWithMetadata, SP1Stdin, SP1DefaultProof};
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -10,7 +9,6 @@ use serde_json;
 use std::process::Command;
 use tokio::task;
 use tokio::time::sleep;
-use std::io::Error;
 
 
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
@@ -54,11 +52,11 @@ async fn prove(req_body: String) -> impl Responder {
     let email = request_data.email;
     let eth_address = request_data.eth_address;
 
+    // Generate DKIM and handle the error case
     let dkim = match generate_dkim(email).await {
         Ok(dkim) => dkim,
         Err(err) => {
-            return HttpResponse::BadRequest()
-                .body(format!("Error generating DKIM: {}", err))
+            return HttpResponse::BadRequest().body(err);
         }
     };
 
@@ -185,14 +183,12 @@ fn verify_proof() -> VerificationResult {
     }
 }
 
-async fn generate_dkim(email: String) -> Result<DKIM, Error> {
+async fn generate_dkim(email: String) ->  Result<DKIM, &'static str>  {
     // Save email as email.eml in ../node-scripts/
     let write_email = web::block(move || {
-        fs::write("../node-scripts/email.eml", email).map_err(|e| Error::new(std::io::ErrorKind::Other, e.to_string()))
+        fs::write("../node-scripts/email.eml", email).expect("failed to write email.eml");
     });
-    if let Err(err) = write_email.await {
-        return Err(err);
-    }
+    write_email.await.expect("failed to write email.eml");
 
     // Change the working directory to ../node-scripts and run generate-dkim.js
     let run_script = task::spawn_blocking(|| {
@@ -200,11 +196,12 @@ async fn generate_dkim(email: String) -> Result<DKIM, Error> {
             .arg("-c")
             .arg("cd ../node-scripts && node generate-dkim.js")
             .spawn()
-            .map_err(|e| Error::new(std::io::ErrorKind::Other, e.to_string()))
-            .and_then(|mut child| child.wait().map_err(|e| Error::new(std::io::ErrorKind::Other, e.to_string())))
+            .expect("failed to run generate-dkim.js")
+            .wait()
+            .expect("failed to wait for generate-dkim.js");
     });
-    if let Err(err) = run_script.await {
-        return Err(err);
+    if run_script.await.is_err() {
+        return Err("email format invalid");
     }
 
     // Watch for dkim.json in ../node-scripts/
@@ -213,17 +210,16 @@ async fn generate_dkim(email: String) -> Result<DKIM, Error> {
         let metadata_result = web::block(move || fs::metadata(dkim_path)).await;
         if metadata_result.is_ok() {
             break web::block(move || {
-                let dkim_json = fs::read_to_string(dkim_path).map_err(|e| Error::new(std::io::ErrorKind::Other, e.to_string()));
-                let dkim: DKIM = serde_json::from_str(&dkim_json?).map_err(|e| Error::new(std::io::ErrorKind::Other, e.to_string()));
+                let dkim_json = fs::read_to_string(dkim_path).expect("failed to read dkim.json");
+                let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
                 dkim
             });
         }
         sleep(std::time::Duration::from_millis(500)).await;
     };
 
-    let dkim = read_dkim.await?;
+    let dkim = read_dkim.await.expect("failed to read dkim.json");
 
     // Return DKIM object
     Ok(dkim)
-}
-
+} 
