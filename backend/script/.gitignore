@@ -1,1 +1,4 @@
 .idea
+dkim.json
+proof-with-io.json
+input_proof_to_be_verified.json
