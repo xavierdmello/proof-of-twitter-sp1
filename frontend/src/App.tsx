@@ -81,7 +81,7 @@ function App() {
           // Handle Axios-specific errors
           const axiosError = error as AxiosError;
           if (axiosError.response) {
-            message = error.response?.data;
+            message = error.response?.data.toString();
           }
         }
 
