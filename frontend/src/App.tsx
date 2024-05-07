@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Textarea, Box, Heading, Text, Highlight, Input, Button, List, ListItem, Link, Badge, Divider, Spinner, useToast, IconButton } from "@chakra-ui/react";
 import { ExternalLinkIcon, DownloadIcon } from "@chakra-ui/icons";
 import axios, { AxiosError } from "axios";
 import Dropzone from "./components/Dropzone";
 
 function App() {
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(localStorage.getItem("email") || "");
   const [proof, setProof] = useState<Blob>();
-  const [ethAddress, setEthAddress] = useState<string>("");
+  const [ethAddress, setEthAddress] = useState<string>(localStorage.getItem("ethAddress") || "");
   const [proofGenerating, setProofGenerating] = useState<boolean>(false);
   const [proofVerifying, setProofVerifying] = useState<boolean>(false);
   const [verificationResult, setVerificationResult] = useState<VerificationResult>();
@@ -19,6 +19,14 @@ function App() {
     ethAddress: string;
     proofValid: boolean;
   };
+
+  useEffect(() => {
+    localStorage.setItem("email", email);
+  }, [email]);
+
+  useEffect(() => {
+    localStorage.setItem("ethAddress", ethAddress);
+  }, [ethAddress]);
 
   async function handleGenerateProof() {
     // Validate inputs
@@ -68,6 +76,7 @@ function App() {
       const proofBlob = new Blob([response.data], { type: "application/json" });
       setProofFileName("proof-with-io.json");
       setProof(proofBlob);
+      setVerificationResult(undefined);
       toast({
         title: "Proof Generated",
         description: `Proof Of Twitter Created (${minutes}m${seconds}s)`,
@@ -142,6 +151,7 @@ function App() {
         const blob = new Blob([reader.result], { type: file.type });
         setProofFileName(file.name);
         setProof(blob);
+        setVerificationResult(undefined);
       } else {
         console.error("Failed to read the file as ArrayBuffer.");
       }
