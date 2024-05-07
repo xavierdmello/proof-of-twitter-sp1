@@ -170,13 +170,9 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 }
 
 fn verify_proof() -> VerificationResult {
-    let mut stdin = SP1Stdin::new();
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
-
-    println!("Loading proof");
     let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
-    println!("Stopped loading proof");
 
     // Verify proof.
     client.verify(&proof, &vk).expect("verification failed");
