@@ -233,7 +233,7 @@ function App() {
         height={"100%"}
         p={"20px"}
         margin={"auto"}
-        minH={"900px"}
+        minH={`max(900px, calc(100vh - 20px))`} // 900px (for smaller screens) or height of viewport
         display={"flex"}
         flexDirection={"column"}
         gap={"15px"}
