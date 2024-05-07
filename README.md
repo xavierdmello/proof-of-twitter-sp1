@@ -32,7 +32,7 @@ If you're running this on a remote server, you may have to forward ports `5173` 
 
 #### Supported Platforms
 
-macOS/Linux
+Linux
 
 ## Future Prospects
 
