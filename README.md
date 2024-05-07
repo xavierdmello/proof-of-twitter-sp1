@@ -14,7 +14,7 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 - [`yarn`](https://yarnpkg.com/getting-started/install)
 - [`rust`](https://www.rust-lang.org/)
 - [`sp1`](https://succinctlabs.github.io/sp1/getting-started/install.html)
-- a `c` linker for compiling rust. not sure? run `sudo apt-get update && apt install build-essential`
+- a `c` linker for compiling rust. not sure? run `sudo apt-get update && sudo apt install build-essential`
 #### Getting Started
 1. Clone and open repo
 2. Run `./start.sh`
