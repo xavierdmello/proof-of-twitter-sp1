@@ -1,4 +1,5 @@
-use sp1_sdk::{ProverClient, SP1Stdin};
+
+use sp1_sdk::{ProverClient, SP1ProofWithMetadata, SP1Stdin, SP1DefaultProof};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
@@ -32,6 +33,8 @@ struct ProveRequestBody {
     email: String,
     eth_address: String,
 }
+
+// Generate proof, save to a binary file, and returned to frontend
 #[post("/prove")]
 async fn prove(req_body: String) -> impl Responder {
     // Parse the request body JSON string into the RequestBody struct
@@ -43,11 +46,12 @@ async fn prove(req_body: String) -> impl Responder {
 
     let dkim = generate_dkim(email).await;
 
-    let proof_json = tokio::task::spawn_blocking(move || generate_proof(&dkim, eth_address))
+    // Generate proof (will be saved to proof-with-io.json)
+    tokio::task::spawn_blocking(move || generate_proof(&dkim, eth_address))
         .await
         .expect("failed to generate proof");
 
-    // Read the proof file
+    // Read the binary proof file
     let proof_file = tokio::fs::read("proof-with-io.json").await.expect("failed to read proof file");
 
     // Send the proof file as an attachment
@@ -60,12 +64,33 @@ async fn prove(req_body: String) -> impl Responder {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-struct VerifyRequestBody {
-    proof: String,
+struct VerificationResult {
+    twitter_handle: String,
+    eth_address: String,
+    proof_valid: bool,
 }
 #[post("/verify")]
-async fn verify(req_body: String) -> impl Responder {
-    
+async fn verify(req_body: web::Bytes) -> impl Responder {
+    // Save the proof data to input_proof_to_be_verified.json as binary
+    let save_proof = web::block(move || {
+        fs::write("input_proof_to_be_verified.json", &req_body).expect("failed to write input_proof_to_be_verified.json");
+    });
+    save_proof.await.expect("failed to save proof");
+
+    // Load the proof into SP1ProofWithMetadata variable
+    let load_proof = web::block(|| {
+        let proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").expect("failed to load proof");
+        proof
+    });
+    let proof = load_proof.await.expect("failed to load proof");
+
+    // Call the verify_proof function
+    let verification_result = verify_proof(&proof);
+
+    // Return the verification result as JSON response
+    HttpResponse::build(StatusCode::OK)
+        .content_type("application/json")
+        .json(verification_result)
 }
 
 
@@ -83,7 +108,6 @@ async fn main() -> std::io::Result<()> {
             .wrap(cors)
             .service(verify)
             .service(prove)
-            .route("/hey", web::get().to(manual_hello))
     })
         .bind(("127.0.0.1", 8000))?
         .run()
@@ -135,6 +159,15 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     println!("Successfully generated and verified proof for the program!");
 }
 
+fn verify_proof(proof: &SP1ProofWithMetadata<SP1DefaultProof>) -> VerificationResult {
+    // Implement the proof verification logic here
+    // For now, return a dummy verification result
+    VerificationResult {
+        twitter_handle: "dummy_handle".to_string(),
+        eth_address: "dummy_address".to_string(),
+        proof_valid: true,
+    }
+}
 
 async fn generate_dkim(email: String) -> DKIM {
     // Save email as email.eml in ../node-scripts/

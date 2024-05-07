@@ -185,8 +185,8 @@ function App() {
                                 performance.</Heading>
                         </Box>
                         <Box width="70%">
-                            <List spacing={2}>
-                                <ListItem display={"flex"} gap={"5px"}>
+                            <List spacing={"7px"}>
+                                <ListItem display={"flex"} gap={"7px"}>
                                     <Box
                                         fontFamily={"IBM Plex Mono"}
                                         fontWeight={"bold"}
@@ -206,7 +206,7 @@ function App() {
                                         Send yourself a <Link href={"https://twitter.com/account/begin_password_reset"} isExternal> password reset email<ExternalLinkIcon mx='2px' /></Link> from Twitter. (Twitter names with emoji might fail to pass DKIM verification)
                                     </Box>
                                 </ListItem>
-                                <ListItem display={"flex"} gap={"5px"}>
+                                <ListItem display={"flex"} gap={"7px"}>
                                     <Box
                                         fontFamily={"IBM Plex Mono"}
                                         fontWeight={"bold"}
@@ -226,7 +226,7 @@ function App() {
                                         In your inbox, find the email from Twitter and click the three dot menu, then "Show original" then "Copy to clipboard". If on Outlook, download the original email as .eml and copy it instead.
                                     </Box>
                                 </ListItem>
-                                <ListItem display={"flex"} gap={"5px"}>
+                                <ListItem display={"flex"} gap={"7px"}>
                                     <Box
                                         fontFamily={"IBM Plex Mono"}
                                         fontWeight={"bold"}
@@ -246,7 +246,7 @@ function App() {
                                         Copy paste or drop that into the box below. Note that we cannot use this to phish you: we do not know your password.
                                     </Box>
                                 </ListItem>
-                                <ListItem display={"flex"} gap={"5px"}>
+                                <ListItem display={"flex"} gap={"7px"}>
                                     <Box
                                         fontFamily={"IBM Plex Mono"}
                                         fontWeight={"bold"}
@@ -266,7 +266,7 @@ function App() {
                                         Paste in your sending Ethereum address. This associates your twitter handle with an ethereum address and ensures that no one else can "steal" your proof for another account
                                     </Box>
                                 </ListItem>
-                                <ListItem minH={"60px"} display={"flex"} gap={"5px"}>
+                                <ListItem minH={"60px"} display={"flex"} gap={"7px"}>
                                     <Box
                                         fontFamily={"IBM Plex Mono"}
                                         fontWeight={"bold"}
