@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { Textarea, Box, Heading, Text, Highlight, Input, Button, List, ListItem, Link, Badge, Divider, Spinner, useToast, IconButton } from "@chakra-ui/react";
+import { Textarea, Box, Heading, Input, Button, Link, Badge, Divider, Spinner, useToast, IconButton } from "@chakra-ui/react";
 import { ExternalLinkIcon, DownloadIcon } from "@chakra-ui/icons";
 import axios, { AxiosError } from "axios";
 import Dropzone from "./components/Dropzone";
+import Hero from "./components/Hero";
+// import GenerateProof from "./components/GenerateProof";
+// import VerifyProof from "./components/VerifyProof";
 
 function App() {
   const [email, setEmail] = useState<string>(localStorage.getItem("email") || "");
@@ -213,6 +216,7 @@ function App() {
     setProofVerifying(false);
   }
 
+  // Shorten ETH Address to be 0x7e4a3..F3fE5 instead of 0x7e4a3edd2F6C516166b4C615884b69B7dbfF3fE5
   function shortenAddress(address: string): string {
     if (address.length < 10) {
       return address;
@@ -225,7 +229,9 @@ function App() {
   }
 
   return (
+    // White background (edges of website)
     <Box backgroundColor={"rgb(244, 249, 249)"} p="10px" overflow={"auto"}>
+      {/*Fancy succinct themed container*/}
       <Box
         width={"100%"}
         borderRadius={"20px"}
@@ -239,6 +245,7 @@ function App() {
         gap={"15px"}
         position="relative"
         overflow="hidden"
+        // Fancy shadow at bottom of container
         _after={{
           content: '""',
           position: "absolute",
@@ -250,6 +257,7 @@ function App() {
           zIndex: 1,
         }}
       >
+        {/*Diagional background lines*/}
         <Box
           position="absolute"
           top={0}
@@ -268,136 +276,9 @@ function App() {
         <Heading fontWeight={"500"} marginX={"auto"} zIndex={2}>
           Proof Of Twitter: SP1 ZK Email Demo
         </Heading>
-
         <Box width={"100%"} maxW={"1200px"} zIndex={2} flexDirection={"column"} marginX={"auto"} display="flex" flexGrow={1}>
           <Divider />
-          <Box flexGrow={1} alignItems="center" display={"flex"} gap={"40px"} flexDirection={"row"}>
-            <Box width={"30%"}>
-              <Heading fontWeight={"300"} fontSize={"20px"}>
-                Prove you own a Twitter handle by verifying a confirmation email from Twitter.
-              </Heading>
-              <br />
-              <Heading fontWeight={"300"} fontSize={"17px"}>
-                Proofs generated using this website are a cryptographic guarantee that a user owns a certain Twitter account, while masking out any private
-                data.
-                <br />
-                <br /> This demo is just one use case of Succinct's open-source zkVM, which lets developers write zero-knowledge proofs in Rust with unbeatable
-                performance.
-              </Heading>
-            </Box>
-            <Box width="70%">
-              <List spacing={"7px"}>
-                <ListItem display={"flex"} gap={"7px"}>
-                  <Box
-                    fontFamily={"IBM Plex Mono"}
-                    fontWeight={"bold"}
-                    paddingLeft={"15px"}
-                    paddingRight={"15px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    backgroundColor={"white"}
-                    opacity={"0.6"}
-                    color={"black"}
-                    borderRadius={"md"}
-                  >
-                    <Text textAlign={"center"}>1</Text>
-                  </Box>
-                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
-                    Send yourself a{" "}
-                    <Link href={"https://twitter.com/account/begin_password_reset"} isExternal>
-                      {" "}
-                      password reset email
-                      <ExternalLinkIcon mx="2px" />
-                    </Link>{" "}
-                    from Twitter. (Twitter names with emoji might fail to pass DKIM verification)
-                  </Box>
-                </ListItem>
-                <ListItem display={"flex"} gap={"7px"}>
-                  <Box
-                    fontFamily={"IBM Plex Mono"}
-                    fontWeight={"bold"}
-                    paddingLeft={"15px"}
-                    paddingRight={"15px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    backgroundColor={"white"}
-                    opacity={"0.6"}
-                    color={"black"}
-                    borderRadius={"md"}
-                  >
-                    <Text textAlign={"center"}>2</Text>
-                  </Box>
-                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
-                    In your inbox, find the email from Twitter and click the three dot menu, then "Show original" then "Copy to clipboard". If on Outlook,
-                    download the original email as .eml and copy it instead.
-                  </Box>
-                </ListItem>
-                <ListItem display={"flex"} gap={"7px"}>
-                  <Box
-                    fontFamily={"IBM Plex Mono"}
-                    fontWeight={"bold"}
-                    paddingLeft={"15px"}
-                    paddingRight={"15px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    backgroundColor={"white"}
-                    opacity={"0.6"}
-                    color={"black"}
-                    borderRadius={"md"}
-                  >
-                    <Text textAlign={"center"}>3</Text>
-                  </Box>
-                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
-                    Copy paste or drop that into the box below. Note that we cannot use this to phish you: we do not know your password.
-                  </Box>
-                </ListItem>
-                <ListItem display={"flex"} gap={"7px"}>
-                  <Box
-                    fontFamily={"IBM Plex Mono"}
-                    fontWeight={"bold"}
-                    paddingLeft={"15px"}
-                    paddingRight={"15px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    backgroundColor={"white"}
-                    opacity={"0.6"}
-                    color={"black"}
-                    borderRadius={"md"}
-                  >
-                    <Text textAlign={"center"}>4</Text>
-                  </Box>
-                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
-                    Paste in your sending Ethereum address. This associates your twitter handle with an ethereum address and ensures that no one else can
-                    "steal" your proof for another account
-                  </Box>
-                </ListItem>
-                <ListItem minH={"60px"} display={"flex"} gap={"7px"}>
-                  <Box
-                    fontFamily={"IBM Plex Mono"}
-                    fontWeight={"bold"}
-                    paddingLeft={"15px"}
-                    paddingRight={"15px"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    backgroundColor={"white"}
-                    opacity={"0.6"}
-                    color={"black"}
-                    borderRadius={"md"}
-                  >
-                    <Text textAlign={"center"}>5</Text>
-                  </Box>
-                  <Box width={"100%"} backgroundColor={"rgb(244, 249, 249)"} borderRadius={"md"} padding={"5px"} opacity={"0.8"}>
-                    Click&nbsp;<b>"Generate Proof"</b> (will take ~4 minutes). Share this to privately prove your Twitter handle ownership!
-                  </Box>
-                </ListItem>
-              </List>
-            </Box>
-          </Box>
+          <Hero />
           <Box display={"flex"} flexDirection={"column"} gap={"20px"} mb={"20px"} zIndex={2}>
             <Divider />
             <Box display={"flex"} flexDirection={"row"} gap={"40px"}>

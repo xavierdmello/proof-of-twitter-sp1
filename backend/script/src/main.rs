@@ -160,7 +160,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 fn verify_proof() -> VerificationResult {
     println!("Verifying proof...");
     let client = ProverClient::new();
-    let (pk, vk) = client.setup(ELF);
+    let (_, vk) = client.setup(ELF);
     let mut proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").unwrap();
 
     // Read output.
