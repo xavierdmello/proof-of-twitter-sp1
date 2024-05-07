@@ -183,7 +183,7 @@ fn verify_proof() -> VerificationResult {
     }
 }
 
-async fn generate_dkim(email: String) ->  Result<DKIM, &'static str>  {
+async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
     // Save email as email.eml in ../node-scripts/
     let write_email = web::block(move || {
         fs::write("../node-scripts/email.eml", email).expect("failed to write email.eml");
@@ -191,7 +191,7 @@ async fn generate_dkim(email: String) ->  Result<DKIM, &'static str>  {
     write_email.await.expect("failed to write email.eml");
 
     // Change the working directory to ../node-scripts and run generate-dkim.js
-    let run_script = task::spawn_blocking(|| {
+    let run_script_result = task::spawn_blocking(|| {
         Command::new("sh")
             .arg("-c")
             .arg("cd ../node-scripts && node generate-dkim.js")
@@ -200,8 +200,11 @@ async fn generate_dkim(email: String) ->  Result<DKIM, &'static str>  {
             .wait()
             .expect("failed to wait for generate-dkim.js");
     });
-    if run_script.await.is_err() {
-        return Err("email format invalid");
+
+    // Handle the error case
+    let run_script = run_script_result.await;
+    if run_script.is_err() {
+        return Err("error occurred while running generate-dkim.js");
     }
 
     // Watch for dkim.json in ../node-scripts/
@@ -222,4 +225,4 @@ async fn generate_dkim(email: String) ->  Result<DKIM, &'static str>  {
 
     // Return DKIM object
     Ok(dkim)
-} 
+}
