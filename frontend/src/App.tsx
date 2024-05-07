@@ -8,7 +8,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 import axios from 'axios';
 
 function App() {
-    const [email, setEmail] = useState<string>('');
+const [email, setEmail] = useState<string>('');
     const [proof, setProof] = useState<Blob>();
     const [ethAddress, setEthAddress] = useState<string>('');
     const [proofGenerating, setProofGenerating] = useState<boolean>(false);
@@ -24,6 +24,29 @@ function App() {
     }
 
     async function handleGenerateProof() {
+        // Validate inputs
+        if (!email.trim()) {
+            toast({
+                title: 'Error',
+                description: 'Please enter a valid email',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        if (!ethAddress.trim()) {
+            toast({
+                title: 'Error',
+                description: 'Please enter a valid Ethereum address',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
         // timeout: 10 mins
         setProofGenerating(true);
 
@@ -69,31 +92,51 @@ function App() {
     }
 
     function handleDownloadProof() {
-        if (proof) {
-            // Create a Blob from the proof string
-            const proofBlob = new Blob([proof], { type: 'application/json' });
-
-            // Create a temporary URL for the Blob
-            const url = window.URL.createObjectURL(proofBlob);
-
-            // Create a link element
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'proof-with-io.json';
-
-            // Append the link to the document body
-            document.body.appendChild(link);
-
-            // Programmatically click the link to trigger the download
-            link.click();
-
-            // Clean up the temporary URL and remove the link from the document body
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(link);
+        if (!proof) {
+            toast({
+                title: 'Error',
+                description: 'Please generate a proof first',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
         }
+
+        // Create a Blob from the proof string
+        const proofBlob = new Blob([proof], { type: 'application/json' });
+
+        // Create a temporary URL for the Blob
+        const url = window.URL.createObjectURL(proofBlob);
+
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'proof-with-io.json';
+
+        // Append the link to the document body
+        document.body.appendChild(link);
+
+        // Programmatically click the link to trigger the download
+        link.click();
+
+        // Clean up the temporary URL and remove the link from the document body
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
     }
 
     async function handleVerifyProof() {
+        if (!proof) {
+            toast({
+                title: 'Error',
+                description: 'Please generate or upload a proof first',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
         setProofVerifying(true)
         try {
             const response = await axios.post("http://127.0.0.1:8000/verify", proof, {
