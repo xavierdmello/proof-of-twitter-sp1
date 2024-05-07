@@ -204,6 +204,7 @@ async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
     // Handle the error case
     let run_script = run_script_result.await;
     if run_script.is_err() {
+        println!("ERRRRRRRRRRRRRRRRORRRRRRRRRRR");
         return Err("error occurred while running generate-dkim.js");
     }
 
