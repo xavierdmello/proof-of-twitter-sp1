@@ -92,8 +92,9 @@ async fn verify(req_body: web::Bytes) -> impl Responder {
     //     proof
     // });
     // let proof = load_proof.await.expect("failed to load proof");
-
-    let proof: SP1ProofWithMetadata<SP1DefaultProof> = serde_json::from_slice(&req_body).unwrap();
+    println!("got proof in shit");
+    // let mut proof: SP1ProofWithMetadata<SP1DefaultProof> = serde_json::from_slice(&req_body).unwrap();
+    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
     println!("loaded proof");
     
     // Call the verify_proof function
