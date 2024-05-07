@@ -119,9 +119,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     stdin.write(&dkim);
     stdin.write(&eth_address);
     let client = ProverClient::new();
-    println!("Client made");
     let (pk, vk) = client.setup(ELF);
-    println!("Client setup from ELF");
     println!("Generating proof...");
     let mut proof = client.prove(&pk, stdin).expect("proving failed");
     println!("Proof finished generating");
@@ -149,6 +147,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
 }
 
 fn verify_proof() -> VerificationResult {
+    println!("Verifying proof...");
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
     let mut proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").unwrap();
@@ -167,14 +166,12 @@ fn verify_proof() -> VerificationResult {
 
     // Verify proof.
     if client.verify(&proof, &vk).is_ok() {
-        println!("good");
         VerificationResult {
             twitter_handle: twitter_username,
             eth_address: verified_address,
             proof_valid: twitter_proven,
         }
     } else {
-        println!("bad");
         VerificationResult {
             twitter_handle: String::new(),
             eth_address: String::new(),

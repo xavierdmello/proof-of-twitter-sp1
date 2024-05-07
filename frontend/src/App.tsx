@@ -363,7 +363,7 @@ function App() {
                     padding={"5px"}
                     opacity={"0.8"}
                   >
-                    Click&nbsp;<b>"Generate Proof"</b>. Share this to privately prove your Twitter handle ownership!
+                    Click&nbsp;<b>"Generate Proof"</b> (will take ~4 minutes). Share this to privately prove your Twitter handle ownership!
                   </Box>
                 </ListItem>
               </List>
