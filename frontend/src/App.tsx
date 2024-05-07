@@ -174,7 +174,6 @@ function App() {
       if (result.proofValid) {
         toast({
           title: "Proof Verified",
-          description: `${result.twitterHandle} belongs to ${result.ethAddress}`,
           status: "success",
           duration: 9000,
           isClosable: true,
