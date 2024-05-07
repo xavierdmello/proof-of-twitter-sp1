@@ -125,25 +125,15 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     let (pk, vk) = client.setup(ELF);
     println!("Client setup from ELF");
     println!("Generating proof...");
-    // let mut proof = client.prove(&pk, stdin).expect("proving failed");
-    println!("Loading proof");
-    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
-    println!("Stopped loading proof");
+    let mut proof = client.prove(&pk, stdin).expect("proving failed");
     println!("Proof finished generating");
 
     // Read output.
-    let body_verified = proof.public_values.read::<bool>();
-    let signature_verified = proof.public_values.read::<bool>();
-    let from_address_verified = proof.public_values.read::<bool>();
-    let is_pw_reset_email = proof.public_values.read::<bool>();
     let twitter_username = proof.public_values.read::<String>();
-    let twitter_proven = proof.public_values.read::<bool>();
     let verified_address = proof.public_values.read::<String>();
+    let twitter_proven = proof.public_values.read::<bool>();
 
-    println!("Email verified: {}", body_verified);
-    println!("Email signature verified: {}", signature_verified);
-    println!("From address verified: {}", from_address_verified);
-    println!("Email is password reset email: {}", is_pw_reset_email);
+
     println!("Twitter username: {}", twitter_username);
     println!("Associated crypto address (valid if twitter proven): {}", verified_address);
     println!("Twitter proven: {}", twitter_proven);
@@ -160,16 +150,29 @@ fn verify_proof() -> VerificationResult {
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
     let mut proof = SP1ProofWithMetadata::load("input_proof_to_be_verified.json").unwrap();
+    
+    // Read output.
+    let twitter_username = proof.public_values.read::<String>();
+    let verified_address = proof.public_values.read::<String>();
+    let twitter_proven = proof.public_values.read::<bool>();
+
+    println!("Twitter username: {}", twitter_username);
+    println!("Associated crypto address (valid if twitter proven): {}", verified_address);
+    println!("Twitter proven: {}", twitter_proven);
 
     // Verify proof.
-    client.verify(&proof, &vk).expect("verification failed");
-    
-    println!("proof verified inside function");
-
-    VerificationResult {
-        twitter_handle: "dummy_handle".to_string(),
-        eth_address: "dummy_address".to_string(),
-        proof_valid: true,
+    if client.verify(&proof, &vk).is_ok() {
+        VerificationResult {
+            twitter_handle: twitter_username,
+            eth_address: verified_address,
+            proof_valid: twitter_proven,
+        }
+    } else {
+        VerificationResult {
+            twitter_handle: String::new(),
+            eth_address: String::new(),
+            proof_valid: false,
+        }
     }
 }
 

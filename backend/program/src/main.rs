@@ -31,13 +31,9 @@ pub fn main() {
     let twitter_username = get_twitter_username(&dkim); // blank string if no/invalid twitter username
     let twitter_proved = body_verified && signature_verified && from_address_verified && is_pw_reset_email && twitter_username.len() > 0;
 
-    sp1_zkvm::io::commit(&body_verified);
-    sp1_zkvm::io::commit(&signature_verified);
-    sp1_zkvm::io::commit(&from_address_verified);
-    sp1_zkvm::io::commit(&is_pw_reset_email);
     sp1_zkvm::io::commit(&twitter_username);
-    sp1_zkvm::io::commit(&twitter_proved);
     sp1_zkvm::io::commit(&crypto_address);
+    sp1_zkvm::io::commit(&twitter_proved);
 }
 
 fn verify_body(dkim: &DKIM) -> bool {
