@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change to the frontend directory
-cd ../../frontend
+cd ./frontend
 
 # Install packages with yarn
 yarn install
@@ -18,7 +18,7 @@ yarn install
 # Patch "@zk-email/helpers" package
 yarn patch-package
 
-# Change back to the project root
+# Change to backend server root
 cd ../script
 
 # Start backend server in background
