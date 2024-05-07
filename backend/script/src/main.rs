@@ -192,11 +192,11 @@ async fn generate_dkim(email: String) -> Result<DKIM, ()> {
     });
     write_email.await.expect("failed to write email.eml");
 
-    // Delete generate-dkim.js if it already exists
+    // Delete dkim.json if it already exists
     let delete_script = task::spawn_blocking(|| {
-        let script_path = "../node-scripts/generate-dkim.js";
+        let script_path = "../node-scripts/dkim.json";
         if fs::metadata(script_path).is_ok() {
-            fs::remove_file(script_path).expect("failed to delete generate-dkim.js");
+            fs::remove_file(script_path).expect("failed to delete dkim.json");
         }
     });
     delete_script.await.expect("failed to delete generate-dkim.js");
