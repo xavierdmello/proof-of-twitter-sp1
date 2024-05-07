@@ -9,6 +9,7 @@ use serde_json;
 use std::process::Command;
 use tokio::task;
 use tokio::time::sleep;
+use std::io::Error;
 
 
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
@@ -52,27 +53,28 @@ async fn prove(req_body: String) -> impl Responder {
     let email = request_data.email;
     let eth_address = request_data.eth_address;
 
-    // Generate DKIM and handle the error case
-    let dkim = match generate_dkim(email).await {
-        Ok(dkim) => dkim,
-        Err(err) => {
-            return HttpResponse::BadRequest().body(err);
+    match generate_dkim(email).await {
+        Ok(dkim) => {
+            // Generate proof (will be saved to proof-with-io.json)
+            tokio::task::spawn_blocking(move || generate_proof(&dkim, eth_address))
+                .await
+                .expect("failed to generate proof");
+
+            // Read the binary proof file
+            let proof_file = tokio::fs::read("proof-with-io.json").await.expect("failed to read proof file");
+
+            // Send the proof file as an attachment
+            HttpResponse::build(StatusCode::OK)
+                .content_type("application/json")
+                .append_header(("Content-Disposition", "attachment; filename=\"proof-with-io.json\""))
+                .body(proof_file)
         }
-    };
-
-    // Generate proof (will be saved to proof-with-io.json)
-    tokio::task::spawn_blocking(move || generate_proof(&dkim, eth_address))
-        .await
-        .expect("failed to generate proof");
-
-    // Read the binary proof file
-    let proof_file = tokio::fs::read("proof-with-io.json").await.expect("failed to read proof file");
-
-    // Send the proof file as an attachment
-    HttpResponse::build(StatusCode::OK)
-        .content_type("application/json")
-        .append_header(("Content-Disposition", "attachment; filename=\"proof-with-io.json\""))
-        .body(proof_file)
+        Err(_) => {
+            // Return an error response if generate_dkim failed
+            HttpResponse::build(StatusCode::BAD_REQUEST)
+                .body("Failed to parse email")
+        }
+    }
 }
 
 
@@ -183,7 +185,7 @@ fn verify_proof() -> VerificationResult {
     }
 }
 
-async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
+async fn generate_dkim(email: String) -> Result<DKIM, ()> {
     // Save email as email.eml in ../node-scripts/
     let write_email = web::block(move || {
         fs::write("../node-scripts/email.eml", email).expect("failed to write email.eml");
@@ -191,7 +193,7 @@ async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
     write_email.await.expect("failed to write email.eml");
 
     // Change the working directory to ../node-scripts and run generate-dkim.js
-    let run_script_result = task::spawn_blocking(|| {
+    let run_script = task::spawn_blocking(|| {
         Command::new("sh")
             .arg("-c")
             .arg("cd ../node-scripts && node generate-dkim.js")
@@ -200,16 +202,11 @@ async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
             .wait()
             .expect("failed to wait for generate-dkim.js");
     });
-
-    // Handle the error case
-    let run_script = run_script_result.await;
-    if run_script.is_err() {
-        println!("ERRRRRRRRRRRRRRRRORRRRRRRRRRR");
-        return Err("error occurred while running generate-dkim.js");
-    }
+    run_script.await.expect("failed to run generate-dkim.js");
 
     // Watch for dkim.json in ../node-scripts/
     let dkim_path = "../node-scripts/dkim.json";
+    let mut iteration = 0;
     let read_dkim = loop {
         let metadata_result = web::block(move || fs::metadata(dkim_path)).await;
         if metadata_result.is_ok() {
@@ -218,6 +215,10 @@ async fn generate_dkim(email: String) -> Result<DKIM, &'static str> {
                 let dkim: DKIM = serde_json::from_str(&dkim_json).expect("failed to parse dkim.json");
                 dkim
             });
+        }
+        iteration += 1;
+        if iteration >= 3 {
+            return Err(());
         }
         sleep(std::time::Duration::from_millis(500)).await;
     };
