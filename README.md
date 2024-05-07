@@ -12,6 +12,9 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 1. Clone and open repo
 2. Run `./start.sh`
 3. Open the frontend by going to http://localhost:5173/ in your browser
+   
+If you're running this on a remote server, you may have to forward ports `5173` (frontend) and `8000` (backend) when ssh'ing in.
+- `ssh -L 5173:localhost:5173 -L 8000:localhost:8000 username@host_ip_address`
 
 #### Prerequisites
 
@@ -28,10 +31,6 @@ You can use a Password Reset email from Twitter to generate a ZK proof that you 
 
 macOS/Linux
 
-**Note:** If you're running this on a remote server, you may have to forward ports `5173` (frontend) and `8000` (backend) when ssh'ing in.
-
-- `ssh -L 5173:localhost:5173 -L 8000:localhost:8000 username@host_ip_address`
-
 ## Future Prospects
 
 This project is a scrappy proof-of-concept to demonstrate what is possible with ZKPs. Under the hood, there are plenty of optimizations that could make proof generation even faster:
@@ -40,3 +39,4 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
 
 ## Examples
+
