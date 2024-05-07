@@ -92,13 +92,18 @@ async fn verify(req_body: web::Bytes) -> impl Responder {
     //     proof
     // });
     // let proof = load_proof.await.expect("failed to load proof");
-    println!("got proof in shit");
+    // println!("got proof in shit");
     // let mut proof: SP1ProofWithMetadata<SP1DefaultProof> = serde_json::from_slice(&req_body).unwrap();
-    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
-    println!("loaded proof");
+    // let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
+    // println!("loaded proof");
     
     // Call the verify_proof function
-    let verification_result = verify_proof(&proof);
+    // let verification_result = verify_proof();
+        // Generate proof (will be saved to proof-with-io.json)
+    let verification_result = tokio::task::spawn_blocking(move || verify_proof())
+        .await
+        .expect("failed to verify proof");
+
 
     // Return the verification result as JSON response
     HttpResponse::build(StatusCode::OK)
@@ -164,9 +169,20 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     println!("Successfully generated and verified proof for the program!");
 }
 
-fn verify_proof(proof: &SP1ProofWithMetadata<SP1DefaultProof>) -> VerificationResult {
-    // Implement the proof verification logic here
-    // For now, return a dummy verification result
+fn verify_proof() -> VerificationResult {
+    let mut stdin = SP1Stdin::new();
+    let client = ProverClient::new();
+    let (pk, vk) = client.setup(ELF);
+
+    println!("Loading proof");
+    let mut proof = SP1ProofWithMetadata::load("proof-with-io.json").unwrap();
+    println!("Stopped loading proof");
+
+    // Verify proof.
+    client.verify(&proof, &vk).expect("verification failed");
+    
+    println!("proof verified inside function");
+
     VerificationResult {
         twitter_handle: "dummy_handle".to_string(),
         eth_address: "dummy_address".to_string(),
