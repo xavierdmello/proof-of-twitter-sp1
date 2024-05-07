@@ -82,7 +82,7 @@ function App() {
           const axiosError = error as AxiosError;
           if (axiosError.response) {
             console.log(error);
-            message = error.response?.data.toString();
+            message = await error.response?.data.text();
           }
         }
 
