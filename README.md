@@ -37,7 +37,7 @@ Linux
 
 ## Future Prospects
 
-This project is a scrappy proof-of-concept to demonstrate what is possible with ZKPs. Under the hood, there are plenty of optimizations that could make proof generation even faster:
+This project is a scrappy proof-of-concept to demonstrate what is possible with ZKPs. Under the hood, there are a few optimizations that could make proof generation even faster:
 
 - **RSA Precompile:** Currently, email signatures are verified manually with rust's `rsa` libray. Succinct has a precompile system of popular functions such as `sha256`, `ed25519`, and more. Precompiles speed up excecution by orders of magnitude. A RSA precompile would make proofs of email signatures far more efficient.
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
