@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Heading, Button, Link, Badge, Spinner, useToast, IconButton } from "@chakra-ui/react";
+import { Box, Heading, Button, Link, Badge, Spinner, useToast, IconButton, Text } from "@chakra-ui/react";
 import { ExternalLinkIcon, DownloadIcon } from "@chakra-ui/icons";
 import Dropzone from "./Dropzone";
 
@@ -65,13 +65,16 @@ export default function VerifyProof({ proof, onFileAccepted, onVerifyProof, onDo
         {verificationResult !== undefined && (
           <Box>
             <Badge colorScheme={verificationResult?.proofValid ? "green" : "red"} variant={"outline"} position={"absolute"} mt="-20px">
-              {verificationResult?.proofValid ? "VERIFIED" : "NOT VERIFIED - PROOF INVALID"}
+              {verificationResult?.proofValid ? "VERIFIED" : "VERIFICATION FAILED - PROOF INVALID"}
             </Badge>
             <Heading fontWeight={"500"} fontFamily={"IBM Plex Mono"} size="sm" alignContent={"center"}>
-              <Link href={`https://x.com/${verificationResult?.twitterHandle}`} isExternal>
-                {verificationResult?.twitterHandle}
-                <ExternalLinkIcon mx="2px" />
-              </Link>
+              {!verificationResult?.twitterHandle && "@N/A"}
+              {verificationResult?.twitterHandle && (
+                <Link href={`https://x.com/${verificationResult?.twitterHandle}`} isExternal>
+                  {verificationResult?.twitterHandle}
+                  <ExternalLinkIcon mx="2px" />
+                </Link>
+              )}
             </Heading>
             <Heading fontWeight={"500"} fontFamily={"IBM Plex Mono"} size="sm" alignContent={"center"}>
               <Link href={`https://etherscan.io/address/${verificationResult?.ethAddress}`} isExternal>
