@@ -43,7 +43,7 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
 
 ## Examples
-
+All examples are built-in the app to try out!
 <details open>
 <summary><strong>Base Case</strong></summary>
 
