@@ -17,7 +17,7 @@ index 3d4525b..b295e56 100644
      signingDomain: string;
      selector: string;
 diff --git a/node_modules/@zk-email/helpers/dist/dkim/index.js b/node_modules/@zk-email/helpers/dist/dkim/index.js
-index 25acf97..37a7ced 100644
+index 25acf97..bcfe0ba 100644
 --- a/node_modules/@zk-email/helpers/dist/dkim/index.js
 +++ b/node_modules/@zk-email/helpers/dist/dkim/index.js
 @@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -29,10 +29,13 @@ index 25acf97..37a7ced 100644
  const dkim_verifier_1 = require("../lib/mailauth/dkim-verifier");
  const tools_1 = require("../lib/mailauth/tools");
  const sanitizers_1 = __importDefault(require("./sanitizers"));
-@@ -36,14 +36,14 @@ async function verifyDKIMSignature(email, domain = '', enableSanitization = true
-     if (result !== 'pass') {
-         throw new Error(`DKIM signature verification failed for domain ${signingDomain}. Reason: ${comment}`);
+@@ -33,17 +33,14 @@ async function verifyDKIMSignature(email, domain = '', enableSanitization = true
+         }
      }
+     const { status: { result, comment }, signingDomain, publicKey, signature, status, body, bodyHash, } = dkimResult;
+-    if (result !== 'pass') {
+-        throw new Error(`DKIM signature verification failed for domain ${signingDomain}. Reason: ${comment}`);
+-    }
 -    const pubKeyData = node_forge_1.pki.publicKeyFromPem(publicKey.toString());
 +
      return {

@@ -7,9 +7,10 @@ interface GenerateProofProps {
   onEmailChange: (email: string) => void;
   onEthAddressChange: (ethAddress: string) => void;
   onGenerateProof: () => Promise<void>;
+  onManualDKIM: (manualDKIM: string) => void;
 }
 
-export default function GenerateProof({ email, ethAddress, onEmailChange, onEthAddressChange, onGenerateProof }: GenerateProofProps) {
+export default function GenerateProof({ email, ethAddress, onEmailChange, onEthAddressChange, onGenerateProof, onManualDKIM }: GenerateProofProps) {
   const [proofGenerating, setProofGenerating] = useState<boolean>(false);
   const [selectedExample, setSelectedExample] = useState<string>("");
   const toast = useToast();
