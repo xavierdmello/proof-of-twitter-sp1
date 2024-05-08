@@ -11,10 +11,6 @@ function App() {
   const [ethAddress, setEthAddress] = useState<string>(localStorage.getItem("ethAddress") || "");
   const [verificationResult, setVerificationResult] = useState<VerificationResult>(); // Result of verification (pass/fail, twitter handle, etc.)
   const [proofFileName, setProofFileName] = useState(""); // Sets text in the upload proof dropbox to proof name if proof is uploaded
-
-  // If not empty string, override DKIM generator to test the Invalid Signature example.
-  // Otherwise the request would fail immediately, as the node.js script that generates DKIMs fails on invalid signature.
-  const [manualDKIM, setManualDKIM] = useState("");
   const toast = useToast();
 
   type VerificationResult = {
@@ -63,7 +59,7 @@ function App() {
     try {
       response = await axios.post(
         "http://127.0.0.1:8000/prove",
-        { email, ethAddress, manualDKIM },
+        { email, ethAddress },
         {
           timeout: 600000,
           responseType: "blob", // Set the response type to 'blob' (binary data)
