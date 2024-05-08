@@ -43,4 +43,25 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
 
 ## Examples
+All examples are avalible to try on the app!
+
+#### Base Case
+- A valid password reset email from Twitter
+- **Result:** Generates valid proof that passes verification
+   
+#### Non-Twitter
+- A valid email not from Twitter
+- Fails at email sender check inside zkproof
+-  **Result:** Generates proof that fails verification
+
+#### Invalid Signature
+- Same email as Base Case except first character of signature is changed from D to E
+- Fails while verifying RSA signature inside zkproof
+-  **Result:** Generates proof that fails verification
+
+#### Not PW Reset Email
+- A valid email from twitter that's not about password resetting
+- Fails at email type check inside zkproof
+-  **Result:** Generates proof that fails verification
+
 
