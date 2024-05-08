@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
-import { Textarea, Box, Heading, Input, Button, Link, Badge, Divider, Spinner, useToast, IconButton } from "@chakra-ui/react";
-import { ExternalLinkIcon, DownloadIcon } from "@chakra-ui/icons";
+import { Box, Heading, Divider, useToast } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
-import Dropzone from "./components/Dropzone";
 import Hero from "./components/Hero";
-// import GenerateProof from "./components/GenerateProof";
-// import VerifyProof from "./components/VerifyProof";
+import GenerateProof from "./components/GenerateProof";
+import VerifyProof from "./components/VerifyProof";
 
 function App() {
-  const [email, setEmail] = useState<string>(localStorage.getItem("email") || "");
-  const [proof, setProof] = useState<Blob>();
+  const [email, setEmail] = useState<string>(localStorage.getItem("email") || ""); // Raw email in string format
+  const [proof, setProof] = useState<Blob>(); // Binary data of proof
   const [ethAddress, setEthAddress] = useState<string>(localStorage.getItem("ethAddress") || "");
-  const [proofGenerating, setProofGenerating] = useState<boolean>(false);
-  const [proofVerifying, setProofVerifying] = useState<boolean>(false);
-  const [verificationResult, setVerificationResult] = useState<VerificationResult>();
-  const [proofFileName, setProofFileName] = useState("");
+  const [proofGenerating, setProofGenerating] = useState<boolean>(false); // Used to animate button
+  const [proofVerifying, setProofVerifying] = useState<boolean>(false); // Used to animate button
+  const [verificationResult, setVerificationResult] = useState<VerificationResult>(); // Result of verification (pass/fail, twitter handle, etc.)
+  const [proofFileName, setProofFileName] = useState(""); // Sets text in the upload proof dropbox to proof name if proof is uploaded
   const toast = useToast();
 
   type VerificationResult = {
@@ -31,6 +29,7 @@ function App() {
     localStorage.setItem("ethAddress", ethAddress);
   }, [ethAddress]);
 
+  // Call 'prove' on backend with inputs 'email' and 'ethAddress'
   async function handleGenerateProof() {
     // Validate inputs
     if (!email.trim()) {
@@ -113,6 +112,7 @@ function App() {
     setProofGenerating(false);
   }
 
+  // Download the proof binary, if it exists, to the user's computer
   function handleDownloadProof() {
     if (!proof) {
       toast({
@@ -147,6 +147,7 @@ function App() {
     document.body.removeChild(link);
   }
 
+  // Handle file being dropped into proof upload dropbox
   function handleFileAccepted(file: File) {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -162,6 +163,7 @@ function App() {
     reader.readAsArrayBuffer(file);
   }
 
+  // Call "verify" on backend with proof binary that was just generated or uploaded
   async function handleVerifyProof() {
     if (!proof) {
       toast({
@@ -214,18 +216,6 @@ function App() {
       });
     }
     setProofVerifying(false);
-  }
-
-  // Shorten ETH Address to be 0x7e4a3..F3fE5 instead of 0x7e4a3edd2F6C516166b4C615884b69B7dbfF3fE5
-  function shortenAddress(address: string): string {
-    if (address.length < 10) {
-      return address;
-    }
-
-    const prefix = address.slice(0, 7);
-    const suffix = address.slice(-5);
-
-    return `${prefix}..${suffix}`;
   }
 
   return (
@@ -282,106 +272,21 @@ function App() {
           <Box display={"flex"} flexDirection={"column"} gap={"20px"} mb={"20px"} zIndex={2}>
             <Divider />
             <Box display={"flex"} flexDirection={"row"} gap={"40px"}>
-              <Box display={"flex"} gap="10px" flexDirection={"column"} width={"100%"}>
-                <Heading fontWeight={"400"} size={"lg"}>
-                  Generate Proof
-                </Heading>
-                <Heading fontWeight={"400"} size={"sm"}>
-                  Enter your raw email
-                </Heading>
-                <Textarea
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  size="md"
-                  minH="200px"
-                  placeholder="Full Email with Headers"
-                  background="rgb(244, 249, 249)"
-                />
-                <Heading fontWeight={"400"} size={"sm"}>
-                  Ethereum address to associate with twitter handle
-                </Heading>
-                <Box display={"flex"} flexDirection={"row"} gap={"10px"}>
-                  <Input
-                    background="rgb(244, 249, 249)"
-                    value={ethAddress}
-                    placeholder={"Ethereum Address (0x...)"}
-                    onChange={(e) => setEthAddress(e.target.value)}
-                    width={"100%"}
-                  ></Input>
-                  <Button
-                    backgroundColor={"rgb(232, 254, 86)"}
-                    isDisabled={proofGenerating}
-                    color={"rgb(5, 14, 22)"}
-                    width={"40%"}
-                    minW="220px"
-                    onClick={handleGenerateProof}
-                  >
-                    {proofGenerating ? "GENERATING PROOF" : "GENERATE PROOF"}&nbsp;{proofGenerating && <Spinner size={"xs"} />}
-                  </Button>
-                </Box>
-              </Box>
-              <Box display={"flex"} gap="10px" flexDirection={"column"} width={"100%"}>
-                <Heading fontWeight={"400"} size={"lg"}>
-                  Verify Proof
-                </Heading>
-                <Heading fontWeight={"400"} size={"sm"}>
-                  Verify a twitter proof
-                </Heading>
-                {/*<Textarea*/}
-                {/*    onChange={e => setProof(e.target.value)}*/}
-                {/*    value={proof}*/}
-                {/*    size="md"*/}
-                {/*    minH="200px"*/}
-                {/*    placeholder='Twitter Proof'*/}
-                {/*    background='rgb(244, 249, 249)'*/}
-                {/*    mb={"30px"}*/}
-                {/*/>*/}
-                <Dropzone onFileAccepted={handleFileAccepted} proofFileName={proofFileName} />
-
-                <Box display={"flex"} flexDirection={"row"}>
-                  {verificationResult !== undefined && (
-                    <Box>
-                      <Badge colorScheme={verificationResult?.proofValid ? "green" : "red"} variant={"outline"} position={"absolute"} mt="-20px">
-                        {verificationResult?.proofValid ? "VERIFIED" : "NOT VERIFIED - PROOF INVALID"}
-                      </Badge>
-                      <Heading fontWeight={"500"} fontFamily={"IBM Plex Mono"} size="sm" alignContent={"center"}>
-                        <Link href={`https://x.com/${verificationResult?.twitterHandle}`} isExternal>
-                          {verificationResult?.twitterHandle}
-                          <ExternalLinkIcon mx="2px" />
-                        </Link>
-                      </Heading>
-                      <Heading fontWeight={"500"} fontFamily={"IBM Plex Mono"} size="sm" alignContent={"center"}>
-                        <Link href={`https://etherscan.io/address/${verificationResult?.ethAddress}`} isExternal>
-                          {shortenAddress(verificationResult?.ethAddress!)}
-                          <ExternalLinkIcon mx="2px" />
-                        </Link>
-                      </Heading>
-                    </Box>
-                  )}
-
-                  <Button
-                    backgroundColor={"rgb(232, 254, 86)"}
-                    color={"rgb(5, 14, 22)"}
-                    onClick={handleVerifyProof}
-                    minW={"220px"}
-                    width={"40%"}
-                    isDisabled={proofVerifying}
-                    marginLeft={"auto"}
-                  >
-                    {proofVerifying ? "VERIFYING PROOF" : "VERIFY PROOF"}&nbsp;{proofVerifying && <Spinner size={"xs"} />}
-                  </Button>
-                  <IconButton
-                    backgroundColor={"rgb(232, 254, 86)"}
-                    color={"rgb(5, 14, 22)"}
-                    onClick={handleDownloadProof}
-                    marginLeft={"10px"}
-                    aria-label="download proof"
-                    icon={<DownloadIcon />}
-                  >
-                    DOWNLOAD PROOF
-                  </IconButton>
-                </Box>
-              </Box>
+              <GenerateProof
+                email={email}
+                ethAddress={ethAddress}
+                onEmailChange={setEmail}
+                onEthAddressChange={setEthAddress}
+                onGenerateProof={handleGenerateProof}
+              />
+              <VerifyProof
+                proof={proof}
+                onFileAccepted={handleFileAccepted}
+                onVerifyProof={handleVerifyProof}
+                onDownloadProof={handleDownloadProof}
+                proofFileName={proofFileName}
+                verificationResult={verificationResult}
+              />
             </Box>
           </Box>
         </Box>

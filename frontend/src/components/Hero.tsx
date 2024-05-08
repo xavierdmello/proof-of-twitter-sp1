@@ -1,4 +1,4 @@
-import { Box, Heading, Text, List, ListItem, Link } from "@chakra-ui/react";
+import { Box, Heading, List, Link } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import InstructionListItem from "./InstructionListItem";
 

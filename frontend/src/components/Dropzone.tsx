@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { useDropzone, Accept } from "react-dropzone";
 import { Center, useColorModeValue, Icon } from "@chakra-ui/react";
 import { AiFillFileAdd } from "react-icons/ai";
-import { px } from "framer-motion";
 
 interface DropzoneProps {
   onFileAccepted: (file: File) => void;
