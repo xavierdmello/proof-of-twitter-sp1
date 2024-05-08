@@ -46,7 +46,7 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 ## Examples
 
 To try examples, paste contents of .eml file into app
-<details open>
+<details>
 <summary><strong>Base Case</strong></summary>
 
 - A valid password reset email from Twitter
@@ -54,7 +54,7 @@ To try examples, paste contents of .eml file into app
 - [Base Case.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Base%20Case.eml)
 </details>
 
-<details open>
+<details>
 <summary><strong>Non-Twitter</strong></summary>
 
 - A valid email not from Twitter 
@@ -63,7 +63,7 @@ To try examples, paste contents of .eml file into app
 - [Non Twitter.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Non%20Twitter.eml)
 </details>
 
-<details open>
+<details>
 <summary><strong>Invalid Signature</strong></summary>
 
 - Same email as Base Case except first character of signature is changed from D to E
@@ -72,7 +72,7 @@ To try examples, paste contents of .eml file into app
 - [Invalid Signature.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Invalid%20Signature.eml)
 </details>
 
-<details open>
+<details>
 <summary><strong>Not PW Reset Email</strong></summary>
 
 - A valid email from twitter that's not about password resetting
