@@ -9,8 +9,6 @@ function App() {
   const [email, setEmail] = useState<string>(localStorage.getItem("email") || ""); // Raw email in string format
   const [proof, setProof] = useState<Blob>(); // Binary data of proof
   const [ethAddress, setEthAddress] = useState<string>(localStorage.getItem("ethAddress") || "");
-  const [proofGenerating, setProofGenerating] = useState<boolean>(false); // Used to animate button
-  const [proofVerifying, setProofVerifying] = useState<boolean>(false); // Used to animate button
   const [verificationResult, setVerificationResult] = useState<VerificationResult>(); // Result of verification (pass/fail, twitter handle, etc.)
   const [proofFileName, setProofFileName] = useState(""); // Sets text in the upload proof dropbox to proof name if proof is uploaded
   const toast = useToast();
@@ -55,8 +53,6 @@ function App() {
     }
 
     // timeout: 10 mins
-    setProofGenerating(true);
-
     let response;
     const startTime = new Date().getTime();
 
@@ -108,8 +104,6 @@ function App() {
         });
       }
     }
-
-    setProofGenerating(false);
   }
 
   // Download the proof binary, if it exists, to the user's computer
@@ -176,7 +170,6 @@ function App() {
       return;
     }
 
-    setProofVerifying(true);
     try {
       const response = await axios.post("http://127.0.0.1:8000/verify", proof, {
         headers: {
@@ -215,7 +208,6 @@ function App() {
         isClosable: true,
       });
     }
-    setProofVerifying(false);
   }
 
   return (
