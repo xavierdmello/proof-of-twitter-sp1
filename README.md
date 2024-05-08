@@ -43,36 +43,34 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
 
 ## Examples
-All examples are avalible to try on the app!
 
-<details>
-<summary>Base Case</summary>
+<details open>
+<summary><strong>Base Case</strong></summary>
 
-A valid password reset email from Twitter
-Result: Generates valid proof that passes verification
-
+- A valid password reset email from Twitter
+- <strong>Result:</strong> Generates valid proof that passes verification
 </details>
-<details>
-<summary>Non-Twitter</summary>
 
-A valid email not from Twitter
-Fails at email sender check inside zkproof
-Result: Generates proof that fails verification
+<details open>
+<summary><strong>Non-Twitter</strong></summary>
 
+- A valid email not from Twitter 
+- Fails at email sender check inside zkproof
+- <strong>Result:</strong> Generates proof that fails verification
 </details>
-<details>
-<summary>Invalid Signature</summary>
 
-Same email as Base Case except first character of signature is changed from D to E
-Fails while verifying RSA signature inside zkproof
-Result: Generates proof that fails verification
+<details open>
+<summary><strong>Invalid Signature</strong></summary>
 
+- Same email as Base Case except first character of signature is changed from D to E
+- Fails while verifying RSA signature inside zkproof  
+- <strong>Result:</strong> Generates proof that fails verification
 </details>
-<details>
-<summary>Not PW Reset Email</summary>
 
-A valid email from twitter that's not about password resetting
-Fails at email type check inside zkproof
-Result: Generates proof that fails verification
+<details open>
+<summary><strong>Not PW Reset Email</strong></summary>
 
+- A valid email from twitter that's not about password resetting
+- Fails at email type check inside zkproof
+- <strong>Result:</strong> Generates proof that fails verification  
 </details>
