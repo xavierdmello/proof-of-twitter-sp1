@@ -59,7 +59,7 @@ To try examples, paste contents of .eml file into app
 
 - A valid email not from Twitter 
 - Fails at email sender check inside zkproof
-- <strong>Result:</strong> Generates proof that fails verification\
+- <strong>Result:</strong> Generates proof that fails verification
 - [Non Twitter.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Non%20Twitter.eml)
 </details>
 
