@@ -42,13 +42,16 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 - **RSA Precompile:** Currently, email signatures are verified manually with rust's `rsa` libray. Succinct has a precompile system of popular functions such as `sha256`, `ed25519`, and more. Precompiles speed up excecution by orders of magnitude. A RSA precompile would make proofs of email signatures far more efficient.
 - **Regex pre-indexing:** The Regex queries search the entire email for labels such as the twitter handle and email sender (x.com). The indices of these labels could be pre-computed and passed into the program, saving many compute cycles that were just spent on searching.
 
+
 ## Examples
-All examples are built-in the app to try out!
+
+To try examples, paste contents of .eml file into app
 <details open>
 <summary><strong>Base Case</strong></summary>
 
 - A valid password reset email from Twitter
 - <strong>Result:</strong> Generates valid proof that passes verification
+- [Base Case.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Base%20Case.eml)
 </details>
 
 <details open>
@@ -56,7 +59,8 @@ All examples are built-in the app to try out!
 
 - A valid email not from Twitter 
 - Fails at email sender check inside zkproof
-- <strong>Result:</strong> Generates proof that fails verification
+- <strong>Result:</strong> Generates proof that fails verification\
+- [Non Twitter.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Non%20Twitter.eml)
 </details>
 
 <details open>
@@ -65,6 +69,7 @@ All examples are built-in the app to try out!
 - Same email as Base Case except first character of signature is changed from D to E
 - Fails while verifying RSA signature inside zkproof  
 - <strong>Result:</strong> Generates proof that fails verification
+- [Invalid Signature.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Invalid%20Signature.eml)
 </details>
 
 <details open>
@@ -72,5 +77,6 @@ All examples are built-in the app to try out!
 
 - A valid email from twitter that's not about password resetting
 - Fails at email type check inside zkproof
-- <strong>Result:</strong> Generates proof that fails verification  
+- <strong>Result:</strong> Generates proof that fails verification
+- [Not PW Reset Email.eml](https://github.com/xavierdmello/proof-of-twitter-sp1/blob/main/examples/Not%20PW%20Reset%20Email.eml)
 </details>
