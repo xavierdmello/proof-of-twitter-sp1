@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Textarea, Box, Heading, Input, Button, useToast, Spinner } from "@chakra-ui/react";
+import { Textarea, Box, Heading, Input, Button, useToast, Spinner, Select } from "@chakra-ui/react";
 
 interface GenerateProofProps {
   email: string;
@@ -11,6 +11,7 @@ interface GenerateProofProps {
 
 export default function GenerateProof({ email, ethAddress, onEmailChange, onEthAddressChange, onGenerateProof }: GenerateProofProps) {
   const [proofGenerating, setProofGenerating] = useState<boolean>(false);
+  const [selectedExample, setSelectedExample] = useState<string>("");
   const toast = useToast();
 
   async function handleGenerateProof() {
@@ -47,9 +48,25 @@ export default function GenerateProof({ email, ethAddress, onEmailChange, onEthA
       <Heading fontWeight={"400"} size={"lg"}>
         Generate Proof
       </Heading>
-      <Heading fontWeight={"400"} size={"sm"}>
-        Enter your raw email
-      </Heading>
+      <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+        <Heading fontWeight={"400"} size={"sm"}>
+          Enter your raw email
+        </Heading>
+        <Select
+          placeholder="No Example Selected"
+          value={selectedExample}
+          onChange={(e) => setSelectedExample(e.target.value)}
+          variant={"filled"}
+          size={"xs"}
+          width={"auto"}
+        >
+          <option value="Base Case">Base Case</option>
+          <option value="Non-Twitter">Non-Twitter</option>
+          <option value="Invalid Signature">Invalid Signature</option>
+          <option value="Not PW Reset Email">Not PW Reset Email</option>
+        </Select>
+      </Box>
+
       <Textarea
         onChange={(e) => onEmailChange(e.target.value)}
         value={email}
@@ -57,6 +74,7 @@ export default function GenerateProof({ email, ethAddress, onEmailChange, onEthA
         minH="200px"
         placeholder="Full Email with Headers"
         background="rgb(244, 249, 249)"
+        isDisabled={selectedExample !== ""}
       />
       <Heading fontWeight={"400"} size={"sm"}>
         Ethereum address to associate with twitter handle
