@@ -49,8 +49,13 @@ fn verify_body(dkim: &DKIM) -> bool {
     // encode hash to base64
     let base64_hash = BASE64_STANDARD.encode(&hash);
 
-    // compare computed body hash with signed body hash
-    base64_hash == dkim.body_hash
+    // compare computed body hash with signed body hash & print if fails
+    if base64_hash != dkim.body_hash {
+        println!("Body Invalid");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 fn verify_signature(dkim: &DKIM) -> bool {
@@ -83,7 +88,14 @@ fn verify_signature(dkim: &DKIM) -> bool {
         prefix: prefix,
     };
     let result = public_key.verify(padding, &hash, &signature);
-    result.is_ok()
+
+    // Print if signature is invalid
+    if !result.is_ok() {
+        println!("Signature Invalid");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 fn verify_from_address(dkim: &DKIM) -> bool {
@@ -121,6 +133,7 @@ fn verify_pw_reset_email(dkim: &DKIM) -> bool {
     // These two methods are sufficient for verifying that the email is a password reset email.
     let subject_re = Regex::new(r"\r\nsubject:Password reset request").unwrap();
     if !subject_re.is_match(&dkim.headers) {
+        println!("Email is not password reset email");
         return false;
     }
 
@@ -138,5 +151,6 @@ fn get_twitter_username(dkim: &DKIM) -> String {
     }
 
     // If no username found, return empty string.
+    println!("No twitter username found");
     String::new()
 }
