@@ -45,23 +45,34 @@ This project is a scrappy proof-of-concept to demonstrate what is possible with 
 ## Examples
 All examples are avalible to try on the app!
 
-#### Base Case
-- A valid password reset email from Twitter
-- **Result:** Generates valid proof that passes verification
-   
-#### Non-Twitter
-- A valid email not from Twitter
-- Fails at email sender check inside zkproof
--  **Result:** Generates proof that fails verification
+<details>
+<summary>Base Case</summary>
 
-#### Invalid Signature
-- Same email as Base Case except first character of signature is changed from D to E
-- Fails while verifying RSA signature inside zkproof
--  **Result:** Generates proof that fails verification
+A valid password reset email from Twitter
+Result: Generates valid proof that passes verification
 
-#### Not PW Reset Email
-- A valid email from twitter that's not about password resetting
-- Fails at email type check inside zkproof
--  **Result:** Generates proof that fails verification
+</details>
+<details>
+<summary>Non-Twitter</summary>
 
+A valid email not from Twitter
+Fails at email sender check inside zkproof
+Result: Generates proof that fails verification
 
+</details>
+<details>
+<summary>Invalid Signature</summary>
+
+Same email as Base Case except first character of signature is changed from D to E
+Fails while verifying RSA signature inside zkproof
+Result: Generates proof that fails verification
+
+</details>
+<details>
+<summary>Not PW Reset Email</summary>
+
+A valid email from twitter that's not about password resetting
+Fails at email type check inside zkproof
+Result: Generates proof that fails verification
+
+</details>
