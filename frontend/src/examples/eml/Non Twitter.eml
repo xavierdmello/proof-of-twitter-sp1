@@ -1,0 +1,87 @@
+Delivered-To: novaholonova@gmail.com
+Received: by 2002:a05:7300:2485:b0:114:4b3:e245 with SMTP id q5csp1816315dyi;
+        Fri, 3 May 2024 15:30:03 -0700 (PDT)
+X-Received: by 2002:a81:49d1:0:b0:618:8900:8105 with SMTP id w200-20020a8149d1000000b0061889008105mr4004124ywa.0.1714775403072;
+        Fri, 03 May 2024 15:30:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1714775403; cv=none;
+        d=google.com; s=arc-20160816;
+        b=aHQ9kxufHV4e+nPdObIxhwleLUexkrThN9Vp4QvGnUB75omV1r+EEEEA5JP7XoPAR1
+         Euwzoee8V6Z4i2w+moP1izr4g5Q2gIs3SLdJDrvpIyDpVDM9YfGgjB/fIfgzvrM5VO30
+         +T5UBj4gpsupz+hyWtLsL7cEleXjYmVV94KFgwJBqihcvZdrjzeFc8vEiUqmIRrWEKCk
+         ja4EhHtErTfgeQ32Rbb5roc0H5VcdTe/+A3iKvlWeZyU62Vnobb+ULgAF4e0ePjXa0q2
+         W1D6eSXKQEOntLd7UcUGNOD3X+YVRRqr/O6RyX0au6m2IfhsmooZsveddmdDM/EVWXMj
+         4ThA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=FoNMGeUxWYiLNfI0h1/VdX9CuFvF4O8mM1GccIA4tb0=;
+        fh=6jBQ1PnAsYyh2vyOKgcdgAse93fGeRgOjn/HuKWLuSc=;
+        b=Yzs9C93a0BrqjnfTMeCW9JyBLj6oGoO0N9GdeizxbGZYTtdOAfF8GcZyAUv+3BE+IC
+         BKyp/8qM3FfqN5Ip0c11mtbIXPvFQXPIbZ24lveEZxU3R5oDCaJo91MqdAeDHX6jNiwm
+         UFTYzDB8SUv4o+SsVC67AlFbQfDAbvUFC9e0kFnyaLExWbhSVQSSy/WiODIYunsFVJKl
+         e8dwRvqG9/3xVJJndDyfcVp3y3pe5GTBd/hs+TGwA58Kmhf14968jKMSGP1XvVgr4xKM
+         Ni7JGXWFgipdXLEHDkB0j9guhN0K4/5dUDa62Pu5o2OzXjXsCNUGxBXSQaUtV38iaNq9
+         FK0A==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=C+Omvq2O;
+       spf=pass (google.com: domain of xaviermdmello@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=xaviermdmello@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Return-Path: <xaviermdmello@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id p6-20020a0de606000000b0061b37255ff2sor3240174ywe.11.2024.05.03.15.30.02
+        for <novaholonova@gmail.com>
+        (Google Transport Security);
+        Fri, 03 May 2024 15:30:03 -0700 (PDT)
+Received-SPF: pass (google.com: domain of xaviermdmello@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=C+Omvq2O;
+       spf=pass (google.com: domain of xaviermdmello@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=xaviermdmello@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714775402; x=1715380202; dara=google.com;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FoNMGeUxWYiLNfI0h1/VdX9CuFvF4O8mM1GccIA4tb0=;
+        b=C+Omvq2OyStvYP/m+AWT8yrYBYnpwX0bdPkVox+wqP1wMC+dKTiYmfGaHXg+bCYAdq
+         vGLgW5lnwMSQbsmlLkwpbdpdTpMuYxbErWsYgPAhHBiM6ZZk57/tMVIoyE5WKksn9eQE
+         Wn04us0cjaD8qTgePCWV5jjushd7CMPAh+yvcVP3LLylx35GXdnNbGy9EBG8y/nlZLvt
+         xJuNxHxNdmbFYzOinNfvcFGgMmcF3NnBPJ64gDzLF0yOorFlSjLZO8jmvM7u6OeHgX4Z
+         g8576xPkpBj2hgYsv/ZVnIVo+7uHml8vSCplG64jhKdikPFxDP7kgFymlXljKi5QNJQ5
+         1r2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714775402; x=1715380202;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FoNMGeUxWYiLNfI0h1/VdX9CuFvF4O8mM1GccIA4tb0=;
+        b=GczaUunWbxYDfiYjGWRruEVA6tMd0EN1Z++R1nM0fJ8X3HQWK+sxDgMxShyVTOlk4t
+         2GLEmG86XWgxDSdV35oVCPowGwL7M4pE1QA3eIVKNdHX4mL3gG9q/gGQ8rM2RAGcb5RW
+         POEPemYL5UjQ13z/8IqcHKEQyNRDxH3T6F0Q5UK+cCp/3y+qOhyB0LX6fMJqiW8DoMtB
+         rb3X/zWS0hxA8vKM7NfQuSQlK2v0fqCYREsAPFpZSQhB1VeQqGrB29hANuTunCNx2CpI
+         NGrACBrXZyxR3JNBmjldzMzbCFCxEACtkkhCDHN7slG8BWQ0f6c6ELlg/3n1U22XdtKl
+         KDkg==
+X-Gm-Message-State: AOJu0Yzgkjd/LPIXauzOkXuObGNnYmUujFWLuJjrZ3oy/ROUbI1b1JYl
+	B2KZhRQiOrDXPiVc3U2ZQEfBRowS0iw6mNsc5VrFYj+Z2UjTzvzJ3pcFeCBkWZt6YALVejcvprr
+	goGt+xBzlZJxyMU2Noz5bGR1aHJgS9FC6
+X-Google-Smtp-Source: AGHT+IFTdgd5pFEUbyngcwjlOyompDett6ZGqXl32Y3Aepuh98QQvrHhJobvwuohawmNrv3icVrgkscTdIpEcEoSUBM=
+X-Received: by 2002:a81:ae28:0:b0:615:19db:8ed1 with SMTP id
+ m40-20020a81ae28000000b0061519db8ed1mr3825225ywh.48.1714775402483; Fri, 03
+ May 2024 15:30:02 -0700 (PDT)
+MIME-Version: 1.0
+From: "Xavier D'Mello" <xaviermdmello@gmail.com>
+Date: Fri, 3 May 2024 18:29:50 -0400
+Message-ID: <CAA7tz5+Va-u-V+uY=8b45ZiBm-axEk5M4C6+15ygTNWM8d1_HQ@mail.gmail.com>
+Subject: hi
+To: novaholonova@gmail.com
+Content-Type: multipart/alternative; boundary="000000000000bc169906179442b4"
+
+--000000000000bc169906179442b4
+Content-Type: text/plain; charset="UTF-8"
+
+d
+
+--000000000000bc169906179442b4
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">d</div>
+
+--000000000000bc169906179442b4--
