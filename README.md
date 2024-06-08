@@ -34,7 +34,7 @@ Also tested on a 36GB M3 Max Macbook Pro
 
 #### Supported Platforms
 
-Linux
+Linux/MacOS
 
 ## Future Prospects
 
