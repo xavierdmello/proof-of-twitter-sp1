@@ -30,6 +30,7 @@ If you're running this on a remote server, you may have to forward ports `5173` 
 #### Reccomended Specs
 
 64GB+ of ram
+Also tested on a 36GB M3 Max Macbook Pro
 
 #### Supported Platforms
 
