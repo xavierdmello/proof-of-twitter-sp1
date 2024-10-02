@@ -2,9 +2,17 @@
 sp1_zkvm::entrypoint!(main);
 use base64::prelude::*;
 use regex::Regex;
+use regex_automata::{dfa::{Automaton, dense, regex::Regex as AutomataRegex}, Match};
 use rsa::{pkcs8::DecodePublicKey, Pkcs1v15Sign, RsaPublicKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use sp1_lib::io::{hint_slice, read_vec};
+// use once_cell::sync::Lazy;
+
+#[cfg(feature = "std")]
+use std::println;
+
+// static TWITTER_USERNAME_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"This email was meant for (@\w+)").unwrap());
 
 #[derive(Serialize, Deserialize, Debug)]
 struct DKIM {
@@ -20,15 +28,24 @@ struct DKIM {
     modulus_length: u32, // unused
 }
 
+const DFA_FWD_BYTES: &[u8] = include_bytes!("../../../generate_regex_bin/dfa_fwd_bytes.bin");
+const DFA_REV_BYTES: &[u8] = include_bytes!("../../../generate_regex_bin/dfa_rev_bytes.bin");
+
 pub fn main() {
     let dkim = sp1_zkvm::io::read::<DKIM>();
     let crypto_address = sp1_zkvm::io::read::<String>();
+    let fwd: dense::DFA<&[u32]> = dense::DFA::from_bytes(&DFA_FWD_BYTES).expect("Failed to convert bytes to DFA").0;
+    println!("fwd");
+    let rev: dense::DFA<&[u32]> = dense::DFA::from_bytes(&DFA_REV_BYTES).expect("Failed to convert bytes to DFA").0;
+    let re = AutomataRegex::builder().build_from_dfas(fwd, rev);
 
+    
     let body_verified = verify_body(&dkim);
     let signature_verified = verify_signature(&dkim);
     let from_address_verified = verify_from_address(&dkim);
     let is_pw_reset_email = verify_pw_reset_email(&dkim);
-    let twitter_username = get_twitter_username(&dkim); // blank string if no/invalid twitter username
+    let twitter_username = get_twitter_username(&dkim, &re); // blank string if no/invalid twitter username
+
     let twitter_proved = body_verified
         && signature_verified
         && from_address_verified
@@ -140,17 +157,19 @@ fn verify_pw_reset_email(dkim: &DKIM) -> bool {
     true
 }
 
-fn get_twitter_username(dkim: &DKIM) -> String {
-    let re = Regex::new(r"This email was meant for (@\w+)").unwrap();
-
-    // If "This email was meant for @username" found.
-    if let Some(captures) = re.captures(&dkim.body) {
-        if let Some(username) = captures.get(1) {
-            return username.as_str().to_string();
-        }
+fn get_twitter_username(dkim: &DKIM, re: &AutomataRegex<dense::DFA<&[u32]>>) -> String {
+    let matches: Vec<Match> = re.find_iter(&dkim.body).collect();
+    if matches.len() > 0 {
+        let start_index = matches[0].start();
+        let end_index = matches[0].end();
+        let substring = &dkim.body[start_index..end_index].to_string();
+        let start_username = substring.find("@").unwrap();
+        let username = &substring[start_username..];
+        return username.to_string();
     }
-
-    // If no username found, return empty string.
-    println!("No twitter username found");
-    String::new()
+    else {
+        println!("No twitter username found");
+        return String::new();
+    }
 }
+
