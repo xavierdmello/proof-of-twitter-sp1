@@ -10,14 +10,11 @@ hex = "0.4.3"
 num-bigint = "0.4.4"
 regex = "1.10.4"
 regex-automata = "0.4.8"
-# rsa = "0.9.6"
-rsa = { path = "../../../new_RSA" }
+rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA", branch = "patch-rsa-v0.10.0-pre.2" }
 serde = "1.0.200"
 sha2 = "0.10.8"
-# sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git" }
-sp1-zkvm = { path = "../../../sp1_rsa/crates/zkvm/entrypoint" }
-sp1-lib = { path = "../../../sp1_rsa/crates/zkvm/lib" }
-once_cell = "1.18.0"
+sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git", branch = "uma-dayal/rsa" }
+
 
 
 [patch.crates-io]

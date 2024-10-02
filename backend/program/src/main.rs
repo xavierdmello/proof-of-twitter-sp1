@@ -6,13 +6,12 @@ use regex_automata::{dfa::{Automaton, dense, regex::Regex as AutomataRegex}, Mat
 use rsa::{pkcs8::DecodePublicKey, Pkcs1v15Sign, RsaPublicKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use sp1_lib::io::{hint_slice, read_vec};
-// use once_cell::sync::Lazy;
+
 
 #[cfg(feature = "std")]
 use std::println;
 
-// static TWITTER_USERNAME_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"This email was meant for (@\w+)").unwrap());
+
 
 #[derive(Serialize, Deserialize, Debug)]
 struct DKIM {
@@ -35,10 +34,9 @@ pub fn main() {
     let dkim = sp1_zkvm::io::read::<DKIM>();
     let crypto_address = sp1_zkvm::io::read::<String>();
     let fwd: dense::DFA<&[u32]> = dense::DFA::from_bytes(&DFA_FWD_BYTES).expect("Failed to convert bytes to DFA").0;
-    println!("fwd");
+    println!("fwd"); // somehow when I remove this print statement, the next line has a deserialization error
     let rev: dense::DFA<&[u32]> = dense::DFA::from_bytes(&DFA_REV_BYTES).expect("Failed to convert bytes to DFA").0;
     let re = AutomataRegex::builder().build_from_dfas(fwd, rev);
-
     
     let body_verified = verify_body(&dkim);
     let signature_verified = verify_signature(&dkim);

@@ -36,13 +36,11 @@ dependencies = [
  "base64",
  "hex",
  "num-bigint",
- "once_cell",
  "regex",
  "regex-automata",
  "rsa",
  "serde",
  "sha2",
- "sp1-lib",
  "sp1-zkvm",
 ]
 
@@ -513,6 +511,7 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 [[package]]
 name = "rsa"
 version = "0.10.0-pre.2"
+source = "git+https://github.com/sp1-patches/RustCrypto-RSA?branch=patch-rsa-v0.10.0-pre.2#69023acf696d45ebd191caf98a6f76deb4b484c0"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -628,6 +627,7 @@ dependencies = [
 [[package]]
 name = "sp1-lib"
 version = "2.0.0"
+source = "git+https://github.com/succinctlabs/sp1.git?branch=uma-dayal/rsa#cfafbac7b6a31a5d7f24aa4651d2f72a43f4bfd2"
 dependencies = [
  "anyhow",
  "bincode",
@@ -640,6 +640,7 @@ dependencies = [
 [[package]]
 name = "sp1-zkvm"
 version = "2.0.0"
+source = "git+https://github.com/succinctlabs/sp1.git?branch=uma-dayal/rsa#cfafbac7b6a31a5d7f24aa4651d2f72a43f4bfd2"
 dependencies = [
  "bincode",
  "cfg-if",

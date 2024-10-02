@@ -13,12 +13,12 @@ fn main() {
     // let mut file = File::create("dfa_bytes.bin").unwrap();
     // file.write_all(&buf).unwrap();
     let re = Regex::new(r"This email was meant for (@\w+)").unwrap();
-    let (fwd_bytes, fwd_pad) = re.forward().to_bytes_native_endian();
-    let (rev_bytes, rev_pad) = re.reverse().to_bytes_native_endian();
+    let (fwd_bytes, _) = re.forward().to_bytes_native_endian();
+    let (rev_bytes, _) = re.reverse().to_bytes_native_endian();
     let mut file = File::create("dfa_fwd_bytes.bin").unwrap();
-    file.write_all(&fwd_bytes[fwd_pad..]).unwrap();
+    file.write_all(&fwd_bytes).unwrap();
     let mut file = File::create("dfa_rev_bytes.bin").unwrap();
-    file.write_all(&rev_bytes[rev_pad..]).unwrap();
+    file.write_all(&rev_bytes).unwrap();
 
     // let mut file = File::create("dfa_rev_bytes.bin").unwrap();
     // file.write_all(&rev_bytes).unwrap();
