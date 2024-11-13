@@ -934,7 +934,7 @@ dependencies = [
  "bitflags",
  "cexpr",
  "clang-sys",
- "itertools 0.10.5",
+ "itertools 0.13.0",
  "log",
  "prettyplease",
  "proc-macro2",
@@ -3483,7 +3483,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e9552f850d5f0964a4e4d0bf306459ac29323ddfbae05e35a7c0d35cb0803cc5"
 dependencies = [
  "anyhow",
- "itertools 0.10.5",
+ "itertools 0.13.0",
  "proc-macro2",
  "quote",
  "syn 2.0.87",
@@ -4242,7 +4242,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-build"
-version = "2.0.0"
+version = "3.0.0"
+source = "git+https://github.com/succinctlabs/sp1.git#0c08cafd4adeb0d246b21411d8422611b3861337"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -4375,7 +4376,8 @@ dependencies = [
 
 [[package]]
 name = "sp1-helper"
-version = "2.0.0"
+version = "3.0.0"
+source = "git+https://github.com/succinctlabs/sp1.git#0c08cafd4adeb0d246b21411d8422611b3861337"
 dependencies = [
  "sp1-build",
 ]

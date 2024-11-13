@@ -5,8 +5,6 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 use sp1_sdk::{ProverClient, SP1Stdin};
 use sp1_prover::{SP1ProofWithMetadata};
-
-
 use std::fs;
 use std::process::Command;
 use tokio::task;
