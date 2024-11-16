@@ -3,10 +3,14 @@ use actix_web::{post, web, web::PayloadConfig, App, HttpResponse, HttpServer, Re
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use sp1_sdk::{ProverClient, SP1ProofWithMetadata, SP1Stdin};
+use sp1_sdk::{ProverClient, SP1Stdin};
+use sp1_prover::{SP1ProofWithMetadata};
 use std::fs;
 use std::process::Command;
 use tokio::task;
+
+#[cfg(feature = "std")]
+use std::println;
 
 const ELF: &[u8] = include_bytes!("../../program/elf/riscv32im-succinct-zkvm-elf");
 
@@ -43,7 +47,7 @@ async fn prove(req_body: String) -> impl Responder {
     // Access the email and ethAddress fields from the parsed struct
     let email = request_data.email;
     let eth_address = request_data.eth_address;
-
+    
     // Parse the email and generate circuit inputs, then generate proof
     match generate_dkim(email).await {
         Ok(dkim) => {
@@ -108,6 +112,7 @@ async fn verify(req_body: web::Bytes) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    sp1_sdk::utils::setup_logger();
     HttpServer::new(|| {
         let cors = Cors::permissive(); // permissive CORS for developnment only
         App::new()
@@ -121,6 +126,7 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
+// #[sp1_derive::cycle_tracker]
 fn generate_proof(dkim: &DKIM, eth_address: String) {
     // Delete proof-with-io.json if it already exists
     if fs::metadata("proof-with-io.json").is_ok() {
@@ -131,10 +137,11 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     let mut stdin = SP1Stdin::new();
     stdin.write(&dkim);
     stdin.write(&eth_address);
+
     let client = ProverClient::new();
     let (pk, vk) = client.setup(ELF);
     println!("Generating proof...");
-    let mut proof = client.prove(&pk, stdin).expect("proving failed");
+    let mut proof = client.prove(&pk, stdin).compressed().run().expect("proving failed");
     println!("Proof finished generating");
 
     // Read output.
@@ -159,6 +166,7 @@ fn generate_proof(dkim: &DKIM, eth_address: String) {
     println!("Successfully generated and verified proof for the program!");
 }
 
+// #[sp1_derive::cycle_tracker]
 fn verify_proof() -> VerificationResult {
     println!("Verifying proof...");
     let client = ProverClient::new();
@@ -178,7 +186,7 @@ fn verify_proof() -> VerificationResult {
     println!("Twitter proven: {}", twitter_proven);
 
     // Verify proof.
-    if client.verify(&proof, &vk).is_ok() {
+    if client.verify(&proof.proof, &vk).is_ok() {
         VerificationResult {
             twitter_handle: twitter_username,
             eth_address: verified_address,

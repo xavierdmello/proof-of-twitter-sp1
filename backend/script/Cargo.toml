@@ -9,13 +9,17 @@ actix-cors = "0.7.0"
 actix-web = "4.5.1"
 serde = "1.0.200"
 serde_json = "1.0.116"
-sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git" }
+sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev" }
+sp1-prover = { git = "https://github.com/succinctlabs/sp1.git", branch = "dev" }
 http = "0.2.12"
 tokio = "1.37.0"
 bincode = "1.3.3"
+sp1-derive = "1.1.0"
+regex-automata = "0.4.8"
+
 
 [build-dependencies]
 sp1-helper = { git = "https://github.com/succinctlabs/sp1.git" }
-
+# sp1-helper = { path = "../../../sp1_rsa/crates/helper" }
 [scripts]
 start = "./start.sh"

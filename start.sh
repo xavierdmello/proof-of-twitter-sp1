@@ -22,7 +22,8 @@ yarn patch-package
 cd ../script
 
 # Start backend server in background
-cargo run --release &
+# RUST_LOG=info cargo run --release &> backend.log &
+RUST_LOG=info cargo run --release &
 
 # Wait for both processes to finish
 wait

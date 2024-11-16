@@ -1,0 +1,7 @@
+[package]
+name = "generate_regex_bin"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+regex-automata = "0.4.8"
