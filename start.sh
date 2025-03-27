@@ -18,6 +18,12 @@ yarn install
 # Patch "@zk-email/helpers" package
 yarn patch-package
 
+# Change to program directory
+cd ../program
+
+# Build program
+cargo prove build
+
 # Change to backend server root
 cd ../script
 

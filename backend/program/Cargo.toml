@@ -1,19 +1,15 @@
-[workspace]
 [package]
 version = "0.1.0"
 name = "backend-program"
 edition = "2021"
 
 [dependencies]
-base64 = "0.22.1"
-hex = "0.4.3"
-num-bigint = "0.4.4"
-regex = "1.10.4"
-rsa = "0.9.6"
-serde = "1.0.200"
-sha2 = "0.10.8"
-sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git" }
+base64 = { workspace = true }
+hex = { workspace = true }
+num-bigint = { workspace = true }
+regex = { workspace = true }
+rsa = { workspace = true }
+serde = { workspace = true }
+sha2 = { workspace = true }
+sp1-zkvm = { workspace = true }
 
-
-[patch.crates-io]
-sha2-v0-10-8 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", package = "sha2", branch = "patch-v0.10.8" }
